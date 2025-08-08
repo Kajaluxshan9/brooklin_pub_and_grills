@@ -28,12 +28,9 @@ const ScrollToTop: React.FC = () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
-
-      // For iOS Safari and other webkit browsers
-      if (window.webkit && window.webkit.messageHandlers) {
-        document.documentElement.style.scrollBehavior = "auto";
-        document.body.style.scrollBehavior = "auto";
-      }
+      // Ensure instant scroll behavior for all browsers
+      document.documentElement.style.scrollBehavior = "auto";
+      document.body.style.scrollBehavior = "auto";
     };
 
     // Immediate scroll
