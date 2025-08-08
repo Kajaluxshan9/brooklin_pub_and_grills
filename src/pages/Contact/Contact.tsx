@@ -64,53 +64,54 @@ const Contact: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setIsSubmitting(true);
+ const handleSubmit = async (event: React.FormEvent) => {
+   event.preventDefault();
+   setIsSubmitting(true);
 
-    try {
-      validateForm();
+   try {
+     validateForm();
 
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          message: formData.message,
-        }),
-      });
+     const response = await fetch("/api/send-email", {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+       },
+       body: JSON.stringify({
+         name: formData.name,
+         email: formData.email,
+         phone: formData.phone,
+         message: formData.message,
+       }),
+     });
 
-      if (response.ok) {
-        setAlertMessage(
-          "Message sent successfully! We'll get back to you soon."
-        );
-        setAlertSeverity("success");
-        setShowAlert(true);
-        setFormData({ name: "", email: "", phone: "", message: "" });
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to send message.");
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error("Error sending message:", error);
-        setAlertMessage(error.message);
-      } else {
-        console.error("Unexpected error:", error);
-        setAlertMessage("An unexpected error occurred.");
-      }
-      setAlertSeverity("error");
-      setShowAlert(true);
-    } finally {
-      setIsSubmitting(false);
-      setTimeout(() => setShowAlert(false), 5000);
-    }
-  };
-
+     if (response.ok) {
+       const responseData = await response.json().catch(() => ({})); // Handle empty response
+       setAlertMessage(
+         responseData.message ||
+           "Message sent successfully! We'll get back to you soon."
+       );
+       setAlertSeverity("success");
+       setShowAlert(true);
+       setFormData({ name: "", email: "", phone: "", message: "" });
+     } else {
+       const errorData = await response.json().catch(() => ({}));
+       throw new Error(errorData.message || "Failed to send message.");
+     }
+   } catch (error: unknown) {
+     if (error instanceof Error) {
+       console.error("Error sending message:", error);
+       setAlertMessage(error.message);
+     } else {
+       console.error("Unexpected error:", error);
+       setAlertMessage("An unexpected error occurred.");
+     }
+     setAlertSeverity("error");
+     setShowAlert(true);
+   } finally {
+     setIsSubmitting(false);
+     setTimeout(() => setShowAlert(false), 5000);
+   }
+ };
   const contactInfo = [
     {
       icon: <LocationOn sx={{ fontSize: 40 }} />,
