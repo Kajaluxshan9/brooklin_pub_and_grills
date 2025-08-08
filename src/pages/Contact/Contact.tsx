@@ -387,7 +387,6 @@ const Contact: React.FC = () => {
                       maxWidth: "100%",
                       aspectRatio: "16/9",
                     }}
-                    allowFullScreen=""
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     title="Brooklin Pub & Grills Location"

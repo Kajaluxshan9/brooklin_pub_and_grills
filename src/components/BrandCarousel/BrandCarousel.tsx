@@ -2,12 +2,10 @@ import React, { useState, useEffect } from "react";
 import {
   Box,
   IconButton,
-  Typography,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
-import { motion, AnimatePresence } from "framer-motion";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
 
 interface Brand {
@@ -49,7 +47,6 @@ const brands: Brand[] = [
 
 const BrandCarousel: React.FC = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -105,18 +102,6 @@ const BrandCarousel: React.FC = () => {
     setTimeout(() => setIsAutoPlaying(true), 5000);
   };
 
-  // Get current visible brands with proper cycling
-  const getCurrentBrands = () => {
-    const visibleBrands = [];
-    for (let i = 0; i < brandsPerView; i++) {
-      const brandIndex = (currentIndex + i) % totalBrands;
-      visibleBrands.push(brands[brandIndex]);
-    }
-    return visibleBrands;
-  };
-
-  // Calculate total slides for pagination (each brand can be a starting point)
-  const totalSlides = totalBrands;
 
   return (
     <Box sx={{ position: "relative", width: "100%", py: 2 }}>
