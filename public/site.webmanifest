@@ -1,0 +1,41 @@
+{
+  "name": "Brooklin Pub & Grill",
+  "short_name": "Brooklin Pub",
+  "description": "Best pub food in Whitby, Ontario. Order online for pickup and delivery.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAFAFA",
+  "theme_color": "#6B4423",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/brooklinpub-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/brooklinpub-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "restaurant", "business"],
+  "shortcuts": [
+    {
+      "name": "Order Online",
+      "short_name": "Order",
+      "description": "Order food online for pickup or delivery",
+      "url": "https://www.kitchonapp.ca/ordering/restaurant/menu?company_uid=f0d6a7d8-6663-43c6-af55-0d11a9773920&restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312&facebook=true",
+      "icons": [{ "src": "/images/brooklinpub-logo.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "View Menu",
+      "short_name": "Menu",
+      "description": "View our full menu",
+      "url": "/menu",
+      "icons": [{ "src": "/images/brooklinpub-logo.png", "sizes": "96x96" }]
+    }
+  ]
+}

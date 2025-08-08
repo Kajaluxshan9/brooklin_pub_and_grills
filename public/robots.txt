@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://brooklinpub.ca/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
+
+# Disallow sensitive paths (if any in the future)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /_internal/
+
+# Allow important assets
+Allow: /images/
+Allow: /brands/
+Allow: /static/
+Allow: /*.css
+Allow: /*.js
+Allow: /*.json

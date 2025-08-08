@@ -48,7 +48,7 @@ function TabPanel(props: TabPanelProps) {
 
 const Menu: React.FC = () => {
   const theme = useTheme();
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(0); // Default to "Primary" tab
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const menuImages = [
@@ -86,18 +86,24 @@ const Menu: React.FC = () => {
     setSelectedImage(null);
   };
 
-  const filteredImages = menuImages.filter((image) => {
+  const getFilteredImages = () => {
     switch (tabValue) {
       case 0:
-        return image.category === "main";
+        return menuImages; // "Primary" tab shows all menus
       case 1:
-        return image.category === "dinner";
+        return menuImages.filter((image) => image.category === "main");
       case 2:
-        return image.category === "catering";
+        return menuImages.filter((image) => image.category === "dinner");
+      case 3:
+        return menuImages.filter((image) => image.category === "catering");
       default:
-        return true;
+        return menuImages;
     }
-  });
+  };
+
+  const categories = ["main", "dinner", "catering"];
+
+  // Removed custom scrollTabs logic to match Specials.tsx navigation style
 
   return (
     <Box>
@@ -150,53 +156,62 @@ const Menu: React.FC = () => {
         sx={{
           py: { xs: 6, xl: 8 },
           px: { xs: 2, md: 4, xl: 6 },
+          alignItems: "center",
         }}
       >
-        <Box sx={{ mb: 4 }}>
-          <Tabs
-            value={tabValue}
-            onChange={handleTabChange}
-            centered
-            sx={{
-              "& .MuiTab-root": {
-                fontSize: "1.1rem",
-                fontWeight: "bold",
-                minWidth: 120,
-                position: "relative",
-                "&:hover": {
-                  color: theme.palette.primary.main,
-                  "&::after": {
-                    width: "80%",
-                    opacity: 0.6,
-                  },
-                },
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
+          allowScrollButtonsMobile
+          sx={{
+            alignItems: "center",
+            justifyContent: "center", // Center tabs horizontally
+            mb: 2,
+            mx: "auto", // Center tabs for all screen sizes
+            display: "flex", // Use flex for alignment
+            width: "100%", // Ensure tabs span the container width
+            maxWidth: "600px", // Limit width on larger screens
+            "& .MuiTab-root": {
+              fontSize: "1.1rem",
+              fontWeight: "bold",
+              minWidth: 120,
+              position: "relative",
+              "&:hover": {
+                color: theme.palette.primary.main,
                 "&::after": {
-                  content: '""',
-                  position: "absolute",
-                  bottom: 0,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  width: 0,
-                  height: 2,
-                  backgroundColor: theme.palette.primary.main,
-                  transition: "width 0.3s ease, opacity 0.3s ease",
-                  opacity: 0,
-                },
-                "&.Mui-selected::after": {
-                  width: "100%",
-                  opacity: 1,
+                  width: "80%",
+                  opacity: 0.6,
                 },
               },
-              "& .MuiTabs-indicator": {
-                display: "none",
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: 0,
+                height: 2,
+                backgroundColor: theme.palette.primary.main,
+                transition: "width 0.3s ease, opacity 0.3s ease",
+                opacity: 0,
               },
-            }}
-          >
-            <Tab label="Main Menu" />
-            <Tab label="Set Dinner" />
-            <Tab label="Catering" />
-          </Tabs>
-        </Box>
+              "&.Mui-selected::after": {
+                width: "100%",
+                opacity: 1,
+              },
+            },
+            "& .MuiTabs-indicator": {
+              display: "none",
+            },
+          }}
+        >
+          <Tab label="Primary" />
+          <Tab label="Main Menu" />
+          <Tab label="Set Dinner" />
+          <Tab label="Catering" />
+        </Tabs>
 
         <AnimatePresence mode="wait">
           <motion.div
@@ -207,6 +222,120 @@ const Menu: React.FC = () => {
             transition={{ duration: 0.3 }}
           >
             <TabPanel value={tabValue} index={0}>
+              {categories.map((category) => (
+                <Box key={category} sx={{ mb: 6 }}>
+                  <Typography
+                    variant="h4"
+                    textAlign="center"
+                    sx={{ mb: 4, color: theme.palette.primary.main }}
+                  >
+                    {category.charAt(0).toUpperCase() + category.slice(1)} Menu
+                  </Typography>
+                  <Grid container spacing={{ xs: 4, xl: 6 }}>
+                    {menuImages
+                      .filter((image) => image.category === category)
+                      .map((image, index) => (
+                        <Grid item xs={12} sm={6} md={4} xl={3} key={image.src}>
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                          >
+                            <Card
+                              sx={{
+                                cursor: "pointer",
+                                transition: "all 0.3s ease",
+                                position: "relative",
+                                "&:hover": {
+                                  boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
+                                  "& .overlay-icons": {
+                                    opacity: 1,
+                                  },
+                                },
+                              }}
+                              onClick={() => handleImageClick(image.src)}
+                            >
+                              <CardMedia
+                                component="img"
+                                image={image.src}
+                                alt={image.title}
+                                sx={{
+                                  height: "auto",
+                                  minHeight: 200,
+                                  objectFit: "contain",
+                                  width: "100%",
+                                }}
+                              />
+                              <Box
+                                className="overlay-icons"
+                                sx={{
+                                  position: "absolute",
+                                  top: 8,
+                                  right: 8,
+                                  display: "flex",
+                                  gap: 1,
+                                  opacity: { xs: 1, md: 0 }, // Always visible on mobile
+                                  transition: "opacity 0.3s ease",
+                                }}
+                              >
+                                <IconButton
+                                  size="small"
+                                  sx={{
+                                    backgroundColor: "rgba(0,0,0,0.7)",
+                                    color: "white",
+                                    "&:hover": {
+                                      backgroundColor: "rgba(0,0,0,0.9)",
+                                    },
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleImageClick(image.src);
+                                  }}
+                                >
+                                  <Fullscreen />
+                                </IconButton>
+                                <IconButton
+                                  size="small"
+                                  sx={{
+                                    backgroundColor: "rgba(0,0,0,0.7)",
+                                    color: "white",
+                                    "&:hover": {
+                                      backgroundColor: "rgba(0,0,0,0.9)",
+                                    },
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    const link = document.createElement("a");
+                                    link.href = image.src;
+                                    link.download = `${image.title}.jpg`;
+                                    link.click();
+                                  }}
+                                >
+                                  <Download />
+                                </IconButton>
+                              </Box>
+                              <CardContent>
+                                <Typography variant="h6" textAlign="center">
+                                  {image.title}
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  textAlign="center"
+                                >
+                                  Fresh ingredients, crafted with care
+                                </Typography>
+                              </CardContent>
+                            </Card>
+                          </motion.div>
+                        </Grid>
+                      ))}
+                  </Grid>
+                </Box>
+              ))}
+            </TabPanel>
+
+            <TabPanel value={tabValue} index={1}>
               <Typography
                 variant="h4"
                 textAlign="center"
@@ -215,7 +344,7 @@ const Menu: React.FC = () => {
                 Main Menu
               </Typography>
               <Grid container spacing={{ xs: 4, xl: 6 }}>
-                {filteredImages.map((image, index) => (
+                {getFilteredImages().map((image, index) => (
                   <Grid item xs={12} sm={6} md={4} xl={3} key={image.src}>
                     <motion.div
                       initial={{ opacity: 0, scale: 0.9 }}
@@ -256,7 +385,7 @@ const Menu: React.FC = () => {
                             right: 8,
                             display: "flex",
                             gap: 1,
-                            opacity: 0,
+                            opacity: { xs: 1, md: 0 }, // Always visible on mobile
                             transition: "opacity 0.3s ease",
                           }}
                         >
@@ -315,7 +444,7 @@ const Menu: React.FC = () => {
               </Grid>
             </TabPanel>
 
-            <TabPanel value={tabValue} index={1}>
+            <TabPanel value={tabValue} index={2}>
               <Typography
                 variant="h4"
                 textAlign="center"
@@ -324,7 +453,7 @@ const Menu: React.FC = () => {
                 Set Dinner Menu
               </Typography>
               <Grid container spacing={4} justifyContent="center">
-                {filteredImages.map((image, index) => (
+                {getFilteredImages().map((image, index) => (
                   <Grid item xs={12} md={8} lg={6} key={image.src}>
                     <motion.div
                       initial={{ opacity: 0, scale: 0.9 }}
@@ -420,7 +549,7 @@ const Menu: React.FC = () => {
               </Grid>
             </TabPanel>
 
-            <TabPanel value={tabValue} index={2}>
+            <TabPanel value={tabValue} index={3}>
               <Typography
                 variant="h4"
                 textAlign="center"
@@ -429,7 +558,7 @@ const Menu: React.FC = () => {
                 Catering Menu
               </Typography>
               <Grid container spacing={4} justifyContent="center">
-                {filteredImages.map((image, index) => (
+                {getFilteredImages().map((image, index) => (
                   <Grid item xs={12} md={8} lg={6} key={image.src}>
                     <motion.div
                       initial={{ opacity: 0, scale: 0.9 }}

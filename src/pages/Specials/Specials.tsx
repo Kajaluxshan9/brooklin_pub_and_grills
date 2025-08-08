@@ -48,7 +48,7 @@ function TabPanel(props: TabPanelProps) {
 
 const Specials: React.FC = () => {
   const theme = useTheme();
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(0); // Default to "Primary" tab
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const specialsImages = [
@@ -128,17 +128,20 @@ const Specials: React.FC = () => {
   const getFilteredImages = () => {
     switch (tabValue) {
       case 0:
-        return specialsImages.filter((img) => img.category === "daily");
+        return specialsImages; // "Primary" tab shows all specials
       case 1:
-        return specialsImages.filter((img) => img.category === "weekly");
+        return specialsImages.filter((img) => img.category === "daily");
       case 2:
-        return specialsImages.filter((img) => img.category === "time");
+        return specialsImages.filter((img) => img.category === "weekly");
       case 3:
+        return specialsImages.filter((img) => img.category === "time");
+      case 4:
         return specialsImages.filter((img) => img.category === "event");
       default:
         return specialsImages;
     }
   };
+
   const getDayColor = (day: string) => {
     const colors = {
       Monday: "#FF6B6B",
@@ -154,6 +157,8 @@ const Specials: React.FC = () => {
     };
     return colors[day as keyof typeof colors] || theme.palette.primary.main;
   };
+
+  const categories = ["daily", "weekly", "time", "event"];
 
   return (
     <Box>
@@ -255,6 +260,7 @@ const Specials: React.FC = () => {
               },
             }}
           >
+            <Tab label="Primary" />
             <Tab label="All Day" />
             <Tab label="Weekly" />
             <Tab label="By Time" />
@@ -271,6 +277,139 @@ const Specials: React.FC = () => {
             transition={{ duration: 0.3 }}
           >
             <TabPanel value={tabValue} index={0}>
+              {categories.map((category) => (
+                <Box key={category} sx={{ mb: 6 }}>
+                  <Typography
+                    variant="h4"
+                    textAlign="center"
+                    sx={{ mb: 4, color: theme.palette.primary.main }}
+                  >
+                    {category.charAt(0).toUpperCase() + category.slice(1)}{" "}
+                    Specials
+                  </Typography>
+                  <Grid container spacing={{ xs: 4, xl: 6 }}>
+                    {specialsImages
+                      .filter((image) => image.category === category)
+                      .map((image, index) => (
+                        <Grid item xs={12} sm={6} md={4} xl={3} key={image.src}>
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                          >
+                            <Card
+                              sx={{
+                                cursor: "pointer",
+                                transition:
+                                  "transform 0.3s ease, box-shadow 0.3s ease",
+                                position: "relative",
+                                "&:hover": {
+                                  transform: "translateY(-5px)",
+                                  boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
+                                  "& .overlay-icons": {
+                                    opacity: 1,
+                                  },
+                                },
+                              }}
+                              onClick={() => handleImageClick(image.src)}
+                            >
+                              <CardMedia
+                                component="img"
+                                image={image.src}
+                                alt={image.title}
+                                sx={{
+                                  height: "auto",
+                                  minHeight: 200,
+                                  objectFit: "contain",
+                                  width: "100%",
+                                }}
+                              />
+                              <Box
+                                className="overlay-icons"
+                                sx={{
+                                  position: "absolute",
+                                  top: 8,
+                                  right: 8,
+                                  display: "flex",
+                                  gap: 1,
+                                  opacity: { xs: 1, md: 0 }, // Always visible on mobile
+                                  transition: "opacity 0.3s ease",
+                                }}
+                              >
+                                <IconButton
+                                  size="small"
+                                  sx={{
+                                    backgroundColor: "rgba(0,0,0,0.7)",
+                                    color: "white",
+                                    "&:hover": {
+                                      backgroundColor: "rgba(0,0,0,0.9)",
+                                    },
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    const link = document.createElement("a");
+                                    link.href = image.src;
+                                    link.download = `${image.title}.jpg`;
+                                    link.click();
+                                  }}
+                                >
+                                  <Download />
+                                </IconButton>
+                                <IconButton
+                                  size="small"
+                                  sx={{
+                                    backgroundColor: "rgba(0,0,0,0.7)",
+                                    color: "white",
+                                    "&:hover": {
+                                      backgroundColor: "rgba(0,0,0,0.9)",
+                                    },
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleImageClick(image.src);
+                                  }}
+                                >
+                                  <Fullscreen />
+                                </IconButton>
+                              </Box>
+                              <CardContent>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 2,
+                                    mb: 1,
+                                  }}
+                                >
+                                  <Typography variant="h6">
+                                    {image.title}
+                                  </Typography>
+                                  <Chip
+                                    label={image.day}
+                                    sx={{
+                                      backgroundColor: getDayColor(image.day),
+                                      color: "white",
+                                      fontWeight: "bold",
+                                    }}
+                                  />
+                                </Box>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                >
+                                  {image.title}
+                                </Typography>
+                              </CardContent>
+                            </Card>
+                          </motion.div>
+                        </Grid>
+                      ))}
+                  </Grid>
+                </Box>
+              ))}
+            </TabPanel>
+
+            <TabPanel value={tabValue} index={1}>
               <Typography
                 variant="h4"
                 textAlign="center"
@@ -391,7 +530,7 @@ const Specials: React.FC = () => {
               </Grid>
             </TabPanel>
 
-            <TabPanel value={tabValue} index={1}>
+            <TabPanel value={tabValue} index={2}>
               <Typography
                 variant="h4"
                 textAlign="center"
@@ -522,7 +661,7 @@ const Specials: React.FC = () => {
               </Grid>
             </TabPanel>
 
-            <TabPanel value={tabValue} index={2}>
+            <TabPanel value={tabValue} index={3}>
               <Typography
                 variant="h4"
                 textAlign="center"
@@ -643,7 +782,7 @@ const Specials: React.FC = () => {
               </Grid>
             </TabPanel>
 
-            <TabPanel value={tabValue} index={3}>
+            <TabPanel value={tabValue} index={4}>
               <Typography
                 variant="h4"
                 textAlign="center"

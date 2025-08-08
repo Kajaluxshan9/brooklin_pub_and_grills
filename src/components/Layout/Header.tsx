@@ -13,10 +13,7 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import {
-  Menu as MenuIcon,
-  Close,
-} from "@mui/icons-material";
+import { Menu as MenuIcon, Close } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -39,7 +36,7 @@ const Header: React.FC = () => {
   };
 
   const drawer = (
-    <Box sx={{ width: 250, p: 2 }}>
+    <Box sx={{ width: 250, p: 2, right:10, }}>
       <Box
         sx={{
           display: "flex",
@@ -49,7 +46,7 @@ const Header: React.FC = () => {
         }}
       >
         <Typography variant="h6" color="primary">
-          Brooklin Pub
+          Brooklin Pub & Grills
         </Typography>
         <IconButton onClick={handleDrawerToggle}>
           <Close />
@@ -67,7 +64,7 @@ const Header: React.FC = () => {
                 location.pathname === item.path
                   ? theme.palette.primary.light
                   : "transparent",
-              borderRadius: 1,
+              borderRadius: 0,
               mb: 1,
               "&:hover": {
                 backgroundColor: theme.palette.primary.light,
@@ -173,7 +170,7 @@ const Header: React.FC = () => {
                             height: 2,
                             width: location.pathname === item.path ? "100%" : 0,
                             backgroundColor: theme.palette.primary.main,
-                            borderRadius: 1,
+                            borderRadius: 0,
                             transition: "width 0.3s ease, opacity 0.3s ease",
                             opacity: location.pathname === item.path ? 1 : 0,
                           }}

@@ -146,20 +146,7 @@ const Footer: React.FC = () => {
                 }}
               >
                 <Phone sx={{ mr: 1, fontSize: 18 }} />
-                <Typography variant="body2">(905) 668-6677</Typography>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  mb: 1,
-                  justifyContent: { xs: "center", md: "flex-start" },
-                }}
-              >
-                <Phone sx={{ mr: 1, fontSize: 18 }} />
-                <Typography variant="body2">
-                  +1 905-425-3055 (Business)
-                </Typography>
+                <Typography variant="body2">+1 905-425-3055</Typography>
               </Box>
               <Box
                 sx={{

@@ -55,9 +55,9 @@ const Contact: React.FC = () => {
 
     try {
       // Initialize EmailJS (you'll need to set up your EmailJS account)
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+      const serviceId = import.meta.env.SERVICE_ID;
+      const templateId = import.meta.env.TEMPLATE_ID;
+      const publicKey = import.meta.env.PUBLIC_KEY;
 
       if (!serviceId || !templateId || !publicKey) {
         // Fallback for demo - show success message
@@ -109,7 +109,7 @@ const Contact: React.FC = () => {
     {
       icon: <Phone sx={{ fontSize: 40 }} />,
       title: "Call Us",
-      details: ["(905) 668-6677", "+1 905-425-3055 (Business)"],
+      details: ["+1 905-425-3055"],
       color: "#A0522D",
     },
     {
@@ -365,7 +365,7 @@ const Contact: React.FC = () => {
                 <Paper
                   elevation={3}
                   sx={{
-                    p: 4,
+                    p: 1,
                     mb: 4,
                     textAlign: "center",
                     minHeight: 250,
@@ -376,31 +376,30 @@ const Contact: React.FC = () => {
                     borderRadius: 3,
                   }}
                 >
-                  <LocationOn
-                    sx={{
-                      fontSize: 64,
-                      color: theme.palette.primary.main,
-                      mb: 2,
+                  <iframe
+                    src="https://www.google.com/maps?q=15+Baldwin+St,+Whitby,+ON+L1M+1A2&output=embed"
+                    width="100%"
+                    height="100%"
+                    style={{
+                      border: 0,
+                      borderRadius: "12px",
+                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+                      maxWidth: "100%",
+                      aspectRatio: "16/9",
                     }}
-                  />
-                  <Typography
-                    variant="h6"
-                    sx={{ mb: 2, color: theme.palette.primary.main }}
+                    allowFullScreen=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Brooklin Pub & Grills Location"
                   >
-                    Find Us Here
-                  </Typography>
-                  <Typography variant="body1" sx={{ mb: 2 }}>
-                    15 Baldwin Street, Whitby, ON L1M 1A2
-                  </Typography>
-                  <Button
-                    variant="outlined"
-                    href="https://www.google.com/maps/search/15+Baldwin+St,+Whitby,+ON+L1M+1A2"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    sx={{ alignSelf: "center" }}
-                  >
-                    Open in Google Maps
-                  </Button>
+                    <p>
+                      Your browser does not support iframes. Please visit{" "}
+                      <a href="https://www.google.com/maps?q=15+Baldwin+St,+Whitby,+ON+L1M+1A2">
+                        Google Maps
+                      </a>{" "}
+                      for the location.
+                    </p>
+                  </iframe>
                 </Paper>
 
                 {/* Social Media */}
@@ -481,13 +480,13 @@ const Contact: React.FC = () => {
             </Typography>
             <Typography variant="body1" sx={{ mb: 3 }}>
               For urgent matters or same-day reservations, please call us
-              directly at (905) 668-6677
+              directly at +1 905-425-3055
             </Typography>
             <Button
               variant="contained"
               size="large"
               startIcon={<Phone />}
-              href="tel:+19056686677"
+              href="tel:+19054253055"
               sx={{
                 backgroundColor: theme.palette.primary.main,
                 color: "white",
