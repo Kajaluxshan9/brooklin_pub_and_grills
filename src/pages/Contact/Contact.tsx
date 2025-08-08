@@ -24,7 +24,7 @@ import {
   Send,
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
-import emailjs from "@emailjs/browser";
+import styles from "./Contact.module.css";
 
 const Contact: React.FC = () => {
   const theme = useTheme();
@@ -49,48 +49,60 @@ const Contact: React.FC = () => {
     }));
   };
 
+  const validateForm = () => {
+    if (!formData.name.trim()) {
+      throw new Error("Name is required.");
+    }
+    if (!formData.email.trim()) {
+      throw new Error("Email is required.");
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      throw new Error("Invalid email format.");
+    }
+    if (!formData.message.trim()) {
+      throw new Error("Message is required.");
+    }
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsSubmitting(true);
 
     try {
-      // Initialize EmailJS (you'll need to set up your EmailJS account)
-      const serviceId = import.meta.env.SERVICE_ID;
-      const templateId = import.meta.env.TEMPLATE_ID;
-      const publicKey = import.meta.env.PUBLIC_KEY;
+      validateForm();
 
-      if (!serviceId || !templateId || !publicKey) {
-        // Fallback for demo - show success message
-        setAlertMessage(
-          "Thank you for your message! We'll get back to you soon."
-        );
-        setAlertSeverity("success");
-        setShowAlert(true);
-        setFormData({ name: "", email: "", phone: "", message: "" });
-      } else {
-        // Send email using EmailJS
-        await emailjs.send(
-          serviceId,
-          templateId,
-          {
-            from_name: formData.name,
-            from_email: formData.email,
-            phone: formData.phone,
-            message: formData.message,
-          },
-          publicKey
-        );
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+        }),
+      });
 
+      if (response.ok) {
         setAlertMessage(
           "Message sent successfully! We'll get back to you soon."
         );
         setAlertSeverity("success");
         setShowAlert(true);
         setFormData({ name: "", email: "", phone: "", message: "" });
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to send message.");
       }
-    } catch (error) {
-      console.error("Error sending email:", error);
-      setAlertMessage("Failed to send message. Please try again later.");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error sending message:", error);
+        setAlertMessage(error.message);
+      } else {
+        console.error("Unexpected error:", error);
+        setAlertMessage("An unexpected error occurred.");
+      }
       setAlertSeverity("error");
       setShowAlert(true);
     } finally {
@@ -380,14 +392,7 @@ const Contact: React.FC = () => {
                     src="https://www.google.com/maps?q=15+Baldwin+St,+Whitby,+ON+L1M+1A2&output=embed"
                     width="100%"
                     height="100%"
-                    style={{
-                      border: 0,
-                      borderRadius: "12px",
-                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-                      maxWidth: "100%",
-                      aspectRatio: "16/9",
-                    }}
-                    loading="lazy"
+                    className={styles.iframeStyles}
                     referrerPolicy="no-referrer-when-downgrade"
                     title="Brooklin Pub & Grills Location"
                   >
