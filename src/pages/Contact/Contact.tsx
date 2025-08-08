@@ -53,65 +53,84 @@ const Contact: React.FC = () => {
     if (!formData.name.trim()) {
       throw new Error("Name is required.");
     }
+    if (formData.name.trim().length < 2) {
+      throw new Error("Name must be at least 2 characters long.");
+    }
     if (!formData.email.trim()) {
       throw new Error("Email is required.");
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      throw new Error("Invalid email format.");
+      throw new Error("Please enter a valid email address.");
     }
     if (!formData.message.trim()) {
       throw new Error("Message is required.");
     }
+    if (formData.message.trim().length < 10) {
+      throw new Error("Message must be at least 10 characters long.");
+    }
+    if (
+      formData.phone &&
+      formData.phone.trim() &&
+      !/^[\d\s\-+()]{10,}$/.test(formData.phone.replace(/\s/g, ""))
+    ) {
+      throw new Error("Please enter a valid phone number.");
+    }
   };
 
- const handleSubmit = async (event: React.FormEvent) => {
-   event.preventDefault();
-   setIsSubmitting(true);
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setShowAlert(false);
 
-   try {
-     validateForm();
+    try {
+      validateForm();
 
-     const response = await fetch("/api/send-email", {
-       method: "POST",
-       headers: {
-         "Content-Type": "application/json",
-       },
-       body: JSON.stringify({
-         name: formData.name,
-         email: formData.email,
-         phone: formData.phone,
-         message: formData.message,
-       }),
-     });
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          message: formData.message.trim(),
+        }),
+      });
 
-     if (response.ok) {
-       const responseData = await response.json().catch(() => ({})); // Handle empty response
-       setAlertMessage(
-         responseData.message ||
-           "Message sent successfully! We'll get back to you soon."
-       );
-       setAlertSeverity("success");
-       setShowAlert(true);
-       setFormData({ name: "", email: "", phone: "", message: "" });
-     } else {
-       const errorData = await response.json().catch(() => ({}));
-       throw new Error(errorData.message || "Failed to send message.");
-     }
-   } catch (error: unknown) {
-     if (error instanceof Error) {
-       console.error("Error sending message:", error);
-       setAlertMessage(error.message);
-     } else {
-       console.error("Unexpected error:", error);
-       setAlertMessage("An unexpected error occurred.");
-     }
-     setAlertSeverity("error");
-     setShowAlert(true);
-   } finally {
-     setIsSubmitting(false);
-     setTimeout(() => setShowAlert(false), 5000);
-   }
- };
+      const responseData = await response.json();
+
+      if (response.ok) {
+        setAlertMessage(
+          responseData.message ||
+            "Message sent successfully! We'll get back to you soon."
+        );
+        setAlertSeverity("success");
+        setShowAlert(true);
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      } else {
+        throw new Error(
+          responseData.message || "Failed to send message. Please try again."
+        );
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error sending message:", error);
+        setAlertMessage(error.message);
+      } else {
+        console.error("Unexpected error:", error);
+        setAlertMessage(
+          "An unexpected error occurred. Please try again later."
+        );
+      }
+      setAlertSeverity("error");
+      setShowAlert(true);
+    } finally {
+      setIsSubmitting(false);
+      setTimeout(() => setShowAlert(false), 8000);
+    }
+  };
+
   const contactInfo = [
     {
       icon: <LocationOn sx={{ fontSize: 40 }} />,
