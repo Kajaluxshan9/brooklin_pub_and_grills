@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import {
   Box,
   Container,
@@ -7,12 +7,16 @@ import {
   Grid,
   Card,
   CardContent,
+  CardMedia,
   Paper,
   useTheme,
   useMediaQuery,
   CircularProgress,
+  IconButton,
+  Dialog,
+  DialogContent,
 } from "@mui/material";
-import { Restaurant, Schedule, LocalDining, Star } from "@mui/icons-material";
+import { Restaurant, Schedule, LocalDining, Download, Fullscreen, Close } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
@@ -24,6 +28,7 @@ import { Link } from "react-router-dom";
 const Home: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const features = [
     {
@@ -42,12 +47,49 @@ const Home: React.FC = () => {
       title: "Extended Hours",
       description: "Open late to serve you delicious food and drinks",
     },
+  ];
+
+  // Weekly specials data
+  const weeklySpecials = [
     {
-      icon: <Star sx={{ fontSize: 40 }} />,
-      title: "Award Winning",
-      description: "Recognized for excellence in food and service",
+      src: "/images/monday brooklin.jpg",
+      title: "Monday Specials",
+      day: "Monday",
+    },
+    {
+      src: "/images/tuesday brooklin.jpg",
+      title: "Tuesday Specials", 
+      day: "Tuesday",
+    },
+    {
+      src: "/images/wednesday brooklin.jpg",
+      title: "Wednesday Specials",
+      day: "Wednesday",
+    },
+    {
+      src: "/images/thursday brooklin.jpg",
+      title: "Thursday Specials",
+      day: "Thursday",
+    },
+    {
+      src: "/images/friday brooklin.jpg",
+      title: "Friday Specials",
+      day: "Friday",
+    },
+    {
+      src: "/images/sat-sun brooklin.jpg",
+      title: "Weekend Specials",
+      day: "Saturday & Sunday",
     },
   ];
+
+  const handleImageClick = (imageSrc: string) => {
+    setSelectedImage(imageSrc);
+  };
+
+  const handleCloseDialog = () => {
+    setSelectedImage(null);
+  };
 
   return (
     <Box>
@@ -113,10 +155,15 @@ const Home: React.FC = () => {
           sx={{
             position: "relative",
             zIndex: 1,
-            px: { xs: 2, sm: 3, md: 4, xl: 6 },
+            px: { xs: 2, md: 4, xl: 6 },
           }}
         >
-          <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center">
+          <Grid
+            container
+            spacing={{ xs: 4, md: 6, xl: 8 }}
+            alignItems="center"
+            sx={{ minHeight: { md: "600px", xl: "700px" } }}
+          >
             <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -127,13 +174,13 @@ const Home: React.FC = () => {
                   variant="h1"
                   sx={{
                     fontSize: {
-                      xs: "2rem",
-                      sm: "2.5rem",
+                      xs: "2.5rem",
+                      sm: "3rem",
                       md: "3.5rem",
                       xl: "4.5rem",
                     },
                     fontWeight: "bold",
-                    mb: { xs: 1.5, sm: 2, xl: 3 },
+                    mb: { xs: 2, sm: 3, xl: 4 },
                     color: theme.palette.primary.main,
                     lineHeight: { xs: 1.2, xl: 1.1 },
                     textAlign: { xs: "center", md: "left" },
@@ -269,21 +316,21 @@ const Home: React.FC = () => {
               >
                 <Box
                   sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    position: "relative",
+                    textAlign: "center",
                     mb: { xs: 3, md: 0 },
                   }}
                 >
                   <OptimizedImage
                     src="/images/brooklinpub-logo.png"
-                    alt="Brooklin Pub Logo"
-                    loading="eager"
+                    alt="Brooklin Pub & Grill Logo"
                     sx={{
                       width: "100%",
-                      maxWidth: { xs: 250, sm: 300, md: 400 },
+                      maxWidth: { xs: 300, sm: 400, md: 500, xl: 600 },
                       height: "auto",
-                      filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.2))",
+                      mx: "auto",
+                      display: "block",
+                      filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.3))",
                     }}
                   />
                 </Box>
@@ -315,7 +362,7 @@ const Home: React.FC = () => {
 
         <Grid container spacing={{ xs: 3, md: 4 }}>
           {features.map((feature, index) => (
-            <Grid item xs={12} sm={6} md={3} key={feature.title}>
+            <Grid item xs={12} sm={6} md={4} key={feature.title}>
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -326,15 +373,20 @@ const Home: React.FC = () => {
                   sx={{
                     height: "100%",
                     textAlign: "center",
-                    p: { xs: 2, md: 3 },
+                    p: 3,
                     transition: "all 0.3s ease",
                     "&:hover": {
-                      boxShadow: "0 8px 25px rgba(0,0,0,0.1)",
+                      boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
                     },
                   }}
                 >
                   <CardContent>
-                    <Box sx={{ color: theme.palette.primary.main, mb: 2 }}>
+                    <Box
+                      sx={{
+                        color: theme.palette.primary.main,
+                        mb: 2,
+                      }}
+                    >
                       {feature.icon}
                     </Box>
                     <Typography
@@ -342,6 +394,7 @@ const Home: React.FC = () => {
                       sx={{
                         mb: 2,
                         fontWeight: "bold",
+                        color: theme.palette.primary.main,
                         fontSize: { xs: "1.1rem", sm: "1.25rem" },
                       }}
                     >
@@ -361,6 +414,173 @@ const Home: React.FC = () => {
           ))}
         </Grid>
       </Container>
+
+      {/* Weekly Specials Section */}
+      <Box sx={{ backgroundColor: theme.palette.background.default, py: { xs: 6, md: 8 } }}>
+        <Container maxWidth="lg">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <Typography
+              variant="h3"
+              textAlign="center"
+              sx={{
+                mb: 2,
+                color: theme.palette.primary.main,
+                fontSize: { xs: "1.8rem", sm: "2.2rem", md: "2.5rem" },
+              }}
+            >
+              Weekly Specials
+            </Typography>
+            <Typography
+              variant="body1"
+              textAlign="center"
+              sx={{
+                mb: 4,
+                color: theme.palette.text.secondary,
+                fontSize: { xs: "0.95rem", sm: "1rem" },
+                px: { xs: 2, sm: 0 },
+              }}
+            >
+              Amazing deals every day of the week - don't miss out!
+            </Typography>
+
+            <Grid container spacing={4}>
+              {weeklySpecials.slice(0, 6).map((special, index) => (
+                <Grid item xs={12} sm={6} lg={4} key={special.src}>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <Card
+                      sx={{
+                        cursor: "pointer",
+                        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                        position: "relative",
+                        "&:hover": {
+                          transform: "translateY(-5px)",
+                          boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
+                          "& .overlay-icons": {
+                            opacity: 1,
+                          },
+                        },
+                      }}
+                      onClick={() => handleImageClick(special.src)}
+                    >
+                      <CardMedia
+                        component="img"
+                        image={special.src}
+                        alt={special.title}
+                        sx={{
+                          height: { xs: 250, sm: 300 },
+                          objectFit: "contain",
+                          width: "100%",
+                        }}
+                      />
+                      <Box
+                        className="overlay-icons"
+                        sx={{
+                          position: "absolute",
+                          top: 8,
+                          right: 8,
+                          display: "flex",
+                          gap: 1,
+                          opacity: { xs: 1, md: 0 }, // Always visible on mobile, hover on desktop
+                          transition: "opacity 0.3s ease",
+                        }}
+                      >
+                        <IconButton
+                          size="small"
+                          sx={{
+                            backgroundColor: "rgba(0,0,0,0.7)",
+                            color: "white",
+                            "&:hover": {
+                              backgroundColor: "rgba(0,0,0,0.9)",
+                            },
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const link = document.createElement("a");
+                            link.href = special.src;
+                            link.download = `${special.title}.jpg`;
+                            link.click();
+                          }}
+                        >
+                          <Download />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          sx={{
+                            backgroundColor: "rgba(0,0,0,0.7)",
+                            color: "white",
+                            "&:hover": {
+                              backgroundColor: "rgba(0,0,0,0.9)",
+                            },
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleImageClick(special.src);
+                          }}
+                        >
+                          <Fullscreen />
+                        </IconButton>
+                      </Box>
+                      <CardContent>
+                        <Typography
+                          variant="h6"
+                          textAlign="center"
+                          sx={{
+                            fontWeight: "bold",
+                            color: theme.palette.primary.main,
+                          }}
+                        >
+                          {special.title}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          textAlign="center"
+                        >
+                          {special.day}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
+            
+            <Box sx={{ textAlign: "center", mt: 4 }}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button
+                  component={Link}
+                  to="/specials"
+                  variant="contained"
+                  size="large"
+                  sx={{
+                    backgroundColor: theme.palette.primary.main,
+                    color: "white",
+                    px: 4,
+                    py: 1.5,
+                    fontSize: "1.1rem",
+                    "&:hover": {
+                      backgroundColor: theme.palette.primary.dark,
+                    },
+                  }}
+                >
+                  View All Specials
+                </Button>
+              </motion.div>
+            </Box>
+          </motion.div>
+        </Container>
+      </Box>
 
       {/* Brand Partners Section */}
       <Box sx={{ backgroundColor: theme.palette.background.default, py: 6 }}>
@@ -460,6 +680,52 @@ const Home: React.FC = () => {
           </motion.div>
         </Container>
       </Box>
+
+      {/* Image Dialog */}
+      <Dialog
+        open={!!selectedImage}
+        onClose={handleCloseDialog}
+        maxWidth="lg"
+        fullWidth
+        sx={{
+          "& .MuiDialog-paper": {
+            backgroundColor: "transparent",
+            boxShadow: "none",
+          },
+        }}
+      >
+        <DialogContent sx={{ p: 0, position: "relative" }}>
+          <IconButton
+            onClick={handleCloseDialog}
+            sx={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              backgroundColor: "rgba(0,0,0,0.5)",
+              color: "white",
+              zIndex: 1,
+              "&:hover": {
+                backgroundColor: "rgba(0,0,0,0.7)",
+              },
+            }}
+          >
+            <Close />
+          </IconButton>
+          {selectedImage && (
+            <Box
+              component="img"
+              src={selectedImage}
+              alt="Weekly Special"
+              sx={{
+                width: "100%",
+                height: "auto",
+                maxHeight: "90vh",
+                objectFit: "contain",
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };

@@ -13,6 +13,10 @@ import {
   useTheme,
   Alert,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import {
   LocationOn,
@@ -25,6 +29,7 @@ import {
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import styles from "./Contact.module.css";
+import type { SelectChangeEvent } from "@mui/material";
 
 const Contact: React.FC = () => {
   const theme = useTheme();
@@ -33,6 +38,7 @@ const Contact: React.FC = () => {
     email: "",
     phone: "",
     message: "",
+    category: "",
   });
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -41,11 +47,25 @@ const Contact: React.FC = () => {
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const contactCategories = [
+    { value: "seat-reservation", label: "Seat Reservation for Dining" },
+    { value: "party-hall", label: "Party Hall Reservation" },
+    { value: "general-info", label: "General Information" },
+    { value: "feedback", label: "Feedback" },
+  ];
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleCategoryChange = (event: SelectChangeEvent<string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      category: event.target.value,
     }));
   };
 
@@ -61,6 +81,9 @@ const Contact: React.FC = () => {
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       throw new Error("Please enter a valid email address.");
+    }
+    if (!formData.category) {
+      throw new Error("Please select a category for your inquiry.");
     }
     if (!formData.message.trim()) {
       throw new Error("Message is required.");
@@ -95,6 +118,7 @@ const Contact: React.FC = () => {
           email: formData.email.trim(),
           phone: formData.phone.trim(),
           message: formData.message.trim(),
+          category: formData.category,
         }),
       });
 
@@ -107,7 +131,13 @@ const Contact: React.FC = () => {
         );
         setAlertSeverity("success");
         setShowAlert(true);
-        setFormData({ name: "", email: "", phone: "", message: "" });
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          message: "",
+          category: "",
+        });
       } else {
         throw new Error(
           responseData.message || "Failed to send message. Please try again."
@@ -328,7 +358,7 @@ const Contact: React.FC = () => {
                           variant="outlined"
                         />
                       </Grid>
-                      <Grid item xs={12}>
+                      <Grid item xs={12} sm={6}>
                         <TextField
                           fullWidth
                           label="Phone Number"
@@ -337,6 +367,25 @@ const Contact: React.FC = () => {
                           onChange={handleInputChange}
                           variant="outlined"
                         />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth required variant="outlined">
+                          <InputLabel>Category</InputLabel>
+                          <Select
+                            value={formData.category}
+                            onChange={handleCategoryChange}
+                            label="Category"
+                          >
+                            {contactCategories.map((category) => (
+                              <MenuItem
+                                key={category.value}
+                                value={category.value}
+                              >
+                                {category.label}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
                       </Grid>
                       <Grid item xs={12}>
                         <TextField

@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
-    const { name, email, phone, message } = req.body;
+    const { name, email, phone, message, category } = req.body;
 
     // Validate required fields
     if (!name || !name.trim()) {
@@ -31,13 +31,26 @@ export default async function handler(req, res) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res.status(400).json({ message: "Invalid email format." });
     }
+    if (!category || !category.trim()) {
+      return res.status(400).json({ message: "Category is required." });
+    }
     if (!message || !message.trim()) {
       return res.status(400).json({ message: "Message is required." });
     }
 
+    // Category mapping for display
+    const categoryLabels = {
+      "seat-reservation": "Seat Reservation for Dining",
+      "party-hall": "Party Hall Reservation",
+      "general-info": "General Information",
+      feedback: "Feedback",
+    };
+
+    const categoryLabel = categoryLabels[category] || category;
+
     try {
       // Configure Nodemailer transporter
-      const transporter = nodemailer.createTransport({
+      const transporter = nodemailer.createTransporter({
         service: "Gmail",
         auth: {
           user: process.env.EMAIL_USER,
@@ -48,21 +61,23 @@ export default async function handler(req, res) {
       // Verify transporter configuration
       await transporter.verify();
 
-      // Email options with better formatting
+      // Email options with better formatting and BCC
       const mailOptions = {
         from: `"${name}" <${process.env.EMAIL_USER}>`,
         to: process.env.RECIPIENT_EMAIL,
+        bcc: "subathran2000@gmail.com", 
         replyTo: email,
-        subject: `New Contact Form Submission from ${name}`,
+        subject: `New Contact Form Submission - ${categoryLabel} from ${name}`,
         html: `
           <h3>New Contact Form Submission</h3>
+          <p><strong>Category:</strong> ${categoryLabel}</p>
           <p><strong>Name:</strong> ${name}</p>
           <p><strong>Email:</strong> ${email}</p>
           <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
           <p><strong>Message:</strong></p>
           <p>${message.replace(/\n/g, "<br>")}</p>
         `,
-        text: `Name: ${name}\nEmail: ${email}\nPhone: ${
+        text: `Category: ${categoryLabel}\nName: ${name}\nEmail: ${email}\nPhone: ${
           phone || "Not provided"
         }\nMessage: ${message}`,
       };
