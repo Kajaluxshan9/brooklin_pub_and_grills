@@ -47,12 +47,13 @@ const Contact: React.FC = () => {
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const contactCategories = [
-    { value: "seat-reservation", label: "Seat Reservation for Dining" },
-    { value: "party-hall", label: "Party Hall Reservation" },
-    { value: "general-info", label: "General Information" },
-    { value: "feedback", label: "Feedback" },
-  ];
+const contactCategories = [
+  { value: "seat-reservation", label: "Dining Seat Reservation" },
+  { value: "party-hall", label: "Party Hall Booking" },
+  { value: "general-info", label: "General Inquiry" },
+  { value: "feedback", label: "Share Your Feedback" },
+];
+
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
