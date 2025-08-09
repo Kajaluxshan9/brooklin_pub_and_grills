@@ -16,7 +16,14 @@ import {
   Dialog,
   DialogContent,
 } from "@mui/material";
-import { Restaurant, Schedule, LocalDining, Download, Fullscreen, Close } from "@mui/icons-material";
+import {
+  Restaurant,
+  Schedule,
+  LocalDining,
+  Download,
+  Fullscreen,
+  Close,
+} from "@mui/icons-material";
 import { motion } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
@@ -28,6 +35,8 @@ import { Link } from "react-router-dom";
 const Home: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
+  const isSmallMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const features = [
@@ -58,7 +67,7 @@ const Home: React.FC = () => {
     },
     {
       src: "/images/tuesday brooklin.jpg",
-      title: "Tuesday Specials", 
+      title: "Tuesday Specials",
       day: "Tuesday",
     },
     {
@@ -93,27 +102,11 @@ const Home: React.FC = () => {
 
   return (
     <Box>
+      {/* Hero Section with Responsive Layout */}
       <Box
         sx={{
           position: "relative",
-          height: {
-            xs: "100vh",
-            sm: "90vh",
-            md: "95vh",
-            xl: "90vh",
-          },
-          minHeight: {
-            xs: "700px",
-            sm: "600px",
-            md: "700px",
-            xl: "750px",
-          },
-          maxHeight: {
-            xs: "none",
-            sm: "800px",
-            md: "900px",
-            xl: "900px",
-          },
+          minHeight: "100vh",
           background: `linear-gradient(
             135deg,
             ${theme.palette.primary.main}20 0%,
@@ -122,6 +115,7 @@ const Home: React.FC = () => {
           display: "flex",
           alignItems: "center",
           overflow: "hidden",
+          py: { xs: 4, sm: 6, md: 8 },
         }}
       >
         {/* 3D Background - Only on desktop for better performance */}
@@ -155,35 +149,53 @@ const Home: React.FC = () => {
           sx={{
             position: "relative",
             zIndex: 1,
-            px: { xs: 2, md: 4, xl: 6 },
+            px: { xs: 2, sm: 3, md: 4, lg: 6 },
           }}
         >
-          <Grid
-            container
-            spacing={{ xs: 4, md: 6, xl: 8 }}
-            alignItems="center"
-            sx={{ minHeight: { md: "600px", xl: "700px" } }}
-          >
-            <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
+          {/* Mobile Layout - Logo at Top */}
+          {isMobile && (
+            <Box sx={{ mb: 4 }}>
               <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: -30 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
+              >
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    mb: 4,
+                  }}
+                >
+                  <OptimizedImage
+                    src="/images/brooklinpub-logo.png"
+                    alt="Brooklin Pub & Grill Logo"
+                    sx={{
+                      width: "100%",
+                      maxWidth: { xs: 280, sm: 350 },
+                      height: "auto",
+                      mx: "auto",
+                      display: "block",
+                      filter: "drop-shadow(0 4px 15px rgba(0,0,0,0.3))",
+                    }}
+                  />
+                </Box>
+              </motion.div>
+
+              {/* Mobile Content */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
               >
                 <Typography
                   variant="h1"
                   sx={{
-                    fontSize: {
-                      xs: "2.5rem",
-                      sm: "3rem",
-                      md: "3.5rem",
-                      xl: "4.5rem",
-                    },
+                    fontSize: { xs: "2rem", sm: "2.5rem" },
                     fontWeight: "bold",
-                    mb: { xs: 2, sm: 3, xl: 4 },
+                    mb: 2,
                     color: theme.palette.primary.main,
-                    lineHeight: { xs: 1.2, xl: 1.1 },
-                    textAlign: { xs: "center", md: "left" },
+                    lineHeight: 1.2,
+                    textAlign: "center",
                   }}
                 >
                   Welcome to Brooklin Pub & Grill
@@ -191,27 +203,22 @@ const Home: React.FC = () => {
                 <Typography
                   variant="h5"
                   sx={{
-                    mb: { xs: 2, sm: 3, xl: 4 },
+                    mb: 3,
                     color: theme.palette.text.secondary,
-                    fontSize: {
-                      xs: "1rem",
-                      sm: "1.2rem",
-                      md: "1.5rem",
-                      xl: "1.8rem",
-                    },
-                    lineHeight: { xs: 1.4, xl: 1.3 },
-                    textAlign: { xs: "center", md: "left" },
+                    fontSize: { xs: "1rem", sm: "1.2rem" },
+                    lineHeight: 1.4,
+                    textAlign: "center",
                   }}
                 >
                   Your neighborhood pub in Whitby, Ontario
                 </Typography>
 
-                {/* Coming Soon Section */}
+                {/* Coming Soon Section - Mobile */}
                 <Paper
                   elevation={3}
                   sx={{
                     p: { xs: 2, sm: 3 },
-                    mb: { xs: 2, sm: 3 },
+                    mb: 3,
                     backgroundColor: theme.palette.secondary.main,
                     color: "white",
                     borderRadius: 2,
@@ -223,6 +230,7 @@ const Home: React.FC = () => {
                       mb: 1,
                       fontWeight: "bold",
                       fontSize: { xs: "1.1rem", sm: "1.25rem" },
+                      textAlign: "center",
                     }}
                   >
                     Official Website Coming Soon!
@@ -232,6 +240,7 @@ const Home: React.FC = () => {
                     sx={{
                       mb: 2,
                       fontSize: { xs: "0.9rem", sm: "1rem" },
+                      textAlign: "center",
                     }}
                   >
                     We're working hard to bring you an amazing new web
@@ -242,18 +251,20 @@ const Home: React.FC = () => {
                     sx={{
                       fontStyle: "italic",
                       fontSize: { xs: "0.8rem", sm: "0.875rem" },
+                      textAlign: "center",
                     }}
                   >
                     ✨ Happy-hour food • Great cocktails • Live music ✨
                   </Typography>
                 </Paper>
 
+                {/* Mobile Action Buttons */}
                 <Box
                   sx={{
                     display: "flex",
+                    flexDirection: { xs: "row", sm: "row" },
                     gap: 2,
-                    flexWrap: "wrap",
-                    justifyContent: { xs: "center", md: "flex-start" },
+                    justifyContent: "center",
                   }}
                 >
                   <motion.div
@@ -262,13 +273,14 @@ const Home: React.FC = () => {
                   >
                     <Button
                       variant="contained"
-                      size="large"
+                      size = ""
+                      fullWidth={isSmallMobile}
                       sx={{
                         backgroundColor: theme.palette.primary.main,
                         color: "white",
-                        px: { xs: 3, sm: 4 },
-                        py: { xs: 1.2, sm: 1.5 },
-                        fontSize: { xs: "1rem", sm: "1.1rem" },
+                        px: 2,
+                        py: 1.5,
+                        fontSize: "1rem",
                         "&:hover": {
                           backgroundColor: theme.palette.primary.dark,
                         },
@@ -289,12 +301,13 @@ const Home: React.FC = () => {
                       to="/menu"
                       variant="outlined"
                       size="large"
+                      fullWidth={isSmallMobile}
                       sx={{
                         borderColor: theme.palette.primary.main,
                         color: theme.palette.primary.main,
-                        px: { xs: 3, sm: 4 },
-                        py: { xs: 1.2, sm: 1.5 },
-                        fontSize: { xs: "1rem", sm: "1.1rem" },
+                        px: 2,
+                        py: 1.5,
+                        fontSize: "1rem",
                         "&:hover": {
                           backgroundColor: theme.palette.primary.main,
                           color: "white",
@@ -306,37 +319,194 @@ const Home: React.FC = () => {
                   </motion.div>
                 </Box>
               </motion.div>
-            </Grid>
+            </Box>
+          )}
 
-            <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-              >
-                <Box
-                  sx={{
-                    position: "relative",
-                    textAlign: "center",
-                    mb: { xs: 3, md: 0 },
-                  }}
+          {/* Desktop/Tablet Layout - Logo on Right */}
+          {!isMobile && (
+            <Grid
+              container
+              spacing={{ md: 6, lg: 8, xl: 10 }}
+              alignItems="center"
+              sx={{ minHeight: "70vh" }}
+            >
+              {/* Content Column - Left Side */}
+              <Grid item md={6} lg={7}>
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8 }}
                 >
-                  <OptimizedImage
-                    src="/images/brooklinpub-logo.png"
-                    alt="Brooklin Pub & Grill Logo"
+                  <Typography
+                    variant="h1"
                     sx={{
-                      width: "100%",
-                      maxWidth: { xs: 300, sm: 400, md: 500, xl: 600 },
-                      height: "auto",
-                      mx: "auto",
-                      display: "block",
-                      filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.3))",
+                      fontSize: {
+                        md: "2.8rem",
+                        lg: "3.5rem",
+                        xl: "4.5rem",
+                      },
+                      fontWeight: "bold",
+                      mb: { md: 3, lg: 4 },
+                      color: theme.palette.primary.main,
+                      lineHeight: { md: 1.2, lg: 1.1 },
                     }}
-                  />
-                </Box>
-              </motion.div>
+                  >
+                    Welcome to Brooklin Pub & Grill
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      mb: { md: 3, lg: 4 },
+                      color: theme.palette.text.secondary,
+                      fontSize: {
+                        md: "1.3rem",
+                        lg: "1.5rem",
+                        xl: "1.8rem",
+                      },
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    Your neighborhood pub in Whitby, Ontario
+                  </Typography>
+
+                  {/* Coming Soon Section - Desktop */}
+                  <Paper
+                    elevation={3}
+                    sx={{
+                      p: { md: 3, lg: 4 },
+                      mb: { md: 3, lg: 4 },
+                      backgroundColor: theme.palette.secondary.main,
+                      color: "white",
+                      borderRadius: 2,
+                      maxWidth: { lg: "90%" },
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        mb: 2,
+                        fontWeight: "bold",
+                        fontSize: { md: "1.2rem", lg: "1.3rem" },
+                      }}
+                    >
+                      Official Website Coming Soon!
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        mb: 2,
+                        fontSize: { md: "1rem", lg: "1.1rem" },
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      We're working hard to bring you an amazing new web
+                      experience with enhanced features and better
+                      functionality.
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontStyle: "italic",
+                        fontSize: { md: "0.9rem", lg: "1rem" },
+                      }}
+                    >
+                      ✨ Happy-hour food • Great cocktails • Live music ✨
+                    </Typography>
+                  </Paper>
+
+                  {/* Desktop Action Buttons */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: 3,
+                    }}
+                  >
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Button
+                        variant="contained"
+                        size="large"
+                        sx={{
+                          backgroundColor: theme.palette.primary.main,
+                          color: "white",
+                          px: { md: 4, lg: 5 },
+                          py: { md: 1.5, lg: 2 },
+                          fontSize: { md: "1.1rem", lg: "1.2rem" },
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.dark,
+                          },
+                        }}
+                        href="https://www.kitchonapp.ca/ordering/restaurant/menu?company_uid=f0d6a7d8-6663-43c6-af55-0d11a9773920&restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312&facebook=true"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Order Online Now
+                      </Button>
+                    </motion.div>
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Button
+                        component={Link}
+                        to="/menu"
+                        variant="outlined"
+                        size="large"
+                        sx={{
+                          borderColor: theme.palette.primary.main,
+                          color: theme.palette.primary.main,
+                          px: { md: 4, lg: 5 },
+                          py: { md: 1.5, lg: 2 },
+                          fontSize: { md: "1.1rem", lg: "1.2rem" },
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.main,
+                            color: "white",
+                          },
+                        }}
+                      >
+                        View Menu
+                      </Button>
+                    </motion.div>
+                  </Box>
+                </motion.div>
+              </Grid>
+
+              {/* Logo Column - Right Side */}
+              <Grid item md={6} lg={5}>
+                <motion.div
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                >
+                  <Box
+                    sx={{
+                      position: "relative",
+                      textAlign: "center",
+                    }}
+                  >
+                    <OptimizedImage
+                      src="/images/brooklinpub-logo.png"
+                      alt="Brooklin Pub & Grill Logo"
+                      sx={{
+                        width: "100%",
+                        maxWidth: {
+                          md: 400,
+                          lg: 500,
+                          xl: 600,
+                        },
+                        height: "auto",
+                        mx: "auto",
+                        display: "block",
+                        filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.3))",
+                      }}
+                    />
+                  </Box>
+                </motion.div>
+              </Grid>
             </Grid>
-          </Grid>
+          )}
         </Container>
       </Box>
 
@@ -416,7 +586,12 @@ const Home: React.FC = () => {
       </Container>
 
       {/* Weekly Specials Section */}
-      <Box sx={{ backgroundColor: theme.palette.background.default, py: { xs: 6, md: 8 } }}>
+      <Box
+        sx={{
+          backgroundColor: theme.palette.background.default,
+          py: { xs: 6, md: 8 },
+        }}
+      >
         <Container maxWidth="lg">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -488,7 +663,7 @@ const Home: React.FC = () => {
                           right: 8,
                           display: "flex",
                           gap: 1,
-                          opacity: { xs: 1, md: 0 }, // Always visible on mobile, hover on desktop
+                          opacity: { xs: 1, md: 0 },
                           transition: "opacity 0.3s ease",
                         }}
                       >
@@ -552,7 +727,7 @@ const Home: React.FC = () => {
                 </Grid>
               ))}
             </Grid>
-            
+
             <Box sx={{ textAlign: "center", mt: 4 }}>
               <motion.div
                 whileHover={{ scale: 1.05 }}
