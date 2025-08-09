@@ -35,7 +35,6 @@ import { Link } from "react-router-dom";
 const Home: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
   const isSmallMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -273,7 +272,6 @@ const Home: React.FC = () => {
                   >
                     <Button
                       variant="contained"
-                      size = ""
                       fullWidth={isSmallMobile}
                       sx={{
                         backgroundColor: theme.palette.primary.main,
