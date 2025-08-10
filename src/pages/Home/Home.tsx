@@ -283,7 +283,7 @@ const Home: React.FC = () => {
                           backgroundColor: theme.palette.primary.dark,
                         },
                       }}
-                      href="https://www.kitchonapp.ca/ordering/restaurant/menu?company_uid=f0d6a7d8-6663-43c6-af55-0d11a9773920&restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312&facebook=true"
+                      href="https://www.kitchonapp.ca/ordering/restaurant/menu?restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -436,7 +436,7 @@ const Home: React.FC = () => {
                             backgroundColor: theme.palette.primary.dark,
                           },
                         }}
-                        href="https://www.kitchonapp.ca/ordering/restaurant/menu?company_uid=f0d6a7d8-6663-43c6-af55-0d11a9773920&restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312&facebook=true"
+                        href="https://www.kitchonapp.ca/ordering/restaurant/menu?restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -844,7 +844,7 @@ const Home: React.FC = () => {
                   backgroundColor: theme.palette.secondary.light,
                 },
               }}
-              href="https://www.kitchonapp.ca/ordering/restaurant/menu?company_uid=f0d6a7d8-6663-43c6-af55-0d11a9773920&restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312&facebook=true"
+              href="https://www.kitchonapp.ca/ordering/restaurant/menu?restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312"
               target="_blank"
               rel="noopener noreferrer"
             >

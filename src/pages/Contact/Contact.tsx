@@ -27,11 +27,18 @@ import {
   Instagram,
   Send,
 } from "@mui/icons-material";
+import SvgIcon from "@mui/material/SvgIcon";
 import { motion } from "framer-motion";
 import styles from "./Contact.module.css";
 import type { SelectChangeEvent } from "@mui/material";
 
 const Contact: React.FC = () => {
+  // TikTok SVG icon
+  const TikTokIcon = (props: React.ComponentProps<typeof SvgIcon>) => (
+    <SvgIcon {...props} viewBox="0 0 24 24">
+      <path d="M12.5 2c.41 0 .75.34.75.75v13.5a3.25 3.25 0 1 1-3.25-3.25c.41 0 .75.34.75.75s-.34.75-.75.75a1.75 1.75 0 1 0 1.75 1.75V4.5c0-.41.34-.75.75-.75zM16.5 5c.41 0 .75.34.75.75v.5c0 2.07 1.68 3.75 3.75 3.75.41 0 .75.34.75.75s-.34.75-.75.75c-2.07 0-3.75-1.68-3.75-3.75v-.5c0-.41.34-.75.75-.75z" />
+    </SvgIcon>
+  );
   const theme = useTheme();
   const [formData, setFormData] = useState({
     name: "",
@@ -516,6 +523,18 @@ const contactCategories = [
                       }}
                     >
                       <Instagram />
+                    </IconButton>
+                    <IconButton
+                      href="https://www.tiktok.com/@brooklinpubngrill"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{
+                        backgroundColor: "#000",
+                        color: "white",
+                        "&:hover": { backgroundColor: "#222" },
+                      }}
+                    >
+                      <TikTokIcon />
                     </IconButton>
                   </Box>
                   <Typography
