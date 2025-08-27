@@ -1,20 +1,24 @@
 import nodemailer from "nodemailer";
 
 export default async function handler(req, res) {
-  // Set CORS headers
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET,OPTIONS,PATCH,DELETE,POST,PUT"
-  );
+  // CORS: restrict to configured origin (set ALLOWED_ORIGIN in environment) for production
+  const ALLOWED_ORIGIN =
+    process.env.ALLOWED_ORIGIN || "https://brooklinpub.com";
+  const requestOrigin = req.headers.origin;
+  const allowOrigin =
+    requestOrigin === ALLOWED_ORIGIN ? requestOrigin : ALLOWED_ORIGIN;
+
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Origin", allowOrigin);
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader(
     "Access-Control-Allow-Headers",
     "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
   );
 
   if (req.method === "OPTIONS") {
-    res.status(200).end();
+    // Preflight response
+    res.status(204).end();
     return;
   }
 
@@ -65,7 +69,7 @@ export default async function handler(req, res) {
       const mailOptions = {
         from: `"${name}" <${process.env.EMAIL_USER}>`,
         to: process.env.RECIPIENT_EMAIL,
-        bcc: "subathran2000@gmail.com", 
+        bcc: "subathran2000@gmail.com",
         replyTo: email,
         subject: `New Contact Form Submission - ${categoryLabel} from ${name}`,
         html: `

@@ -52,6 +52,9 @@ const About: React.FC = () => {
           py: 8,
           position: "relative",
           overflow: "hidden",
+          minHeight: "60vh", // ensure consistent hero height across pages
+          display: "flex",
+          alignItems: "center",
         }}
       >
         <Container maxWidth="xl" sx={{ px: { xs: 2, md: 4, xl: 6 } }}>

@@ -8,12 +8,25 @@ import {
   IconButton,
   Drawer,
   List,
-  ListItem,
   ListItemText,
+  ListItemButton,
+  ListItemIcon,
+  Divider,
+  Avatar,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { Menu as MenuIcon, Close } from "@mui/icons-material";
+import {
+  Menu as MenuIcon,
+  Close,
+  Home as HomeIcon,
+  Info as InfoIcon,
+  MenuBook as MenuBookIcon,
+  LocalOffer as LocalOfferIcon,
+  ContactMail as ContactMailIcon,
+  Facebook as FacebookIcon,
+  Instagram as InstagramIcon,
+} from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -36,50 +49,128 @@ const Header: React.FC = () => {
   };
 
   const drawer = (
-    <Box sx={{ width: 250, p: 2, right:10, }}>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: 320,
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
+          justifyContent: "space-between",
           mb: 2,
         }}
       >
-        <Typography variant="h6" color="primary">
-          Brooklin Pub & Grills
-        </Typography>
-        <IconButton onClick={handleDrawerToggle}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Avatar
+            src="/images/brooklinpub-logo.png"
+            alt="logo"
+            sx={{ width: 48, height: 48 }}
+          />
+          <Box>
+            <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+              Brooklin Pub & Grill
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Whitby • Local Eats
+            </Typography>
+          </Box>
+        </Box>
+        <IconButton aria-label="close menu" onClick={handleDrawerToggle}>
           <Close />
         </IconButton>
       </Box>
-      <List>
-        {navItems.map((item) => (
-          <ListItem
-            key={item.label}
-            component={Link}
-            to={item.path}
-            onClick={handleDrawerToggle}
-            sx={{
-              backgroundColor:
-                location.pathname === item.path
-                  ? theme.palette.primary.light
-                  : "transparent",
-              borderRadius: 0,
-              mb: 1,
-              "&:hover": {
-                backgroundColor: theme.palette.primary.light,
-              },
-            }}
-          >
-            <ListItemText
-              primary={item.label}
+
+      <Divider sx={{ mb: 1 }} />
+
+      <List sx={{ flexGrow: 1 }}>
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          const getIcon = () => {
+            switch (item.label.toLowerCase()) {
+              case "home":
+                return <HomeIcon />;
+              case "about us":
+                return <InfoIcon />;
+              case "menu":
+                return <MenuBookIcon />;
+              case "specials":
+                return <LocalOfferIcon />;
+              case "contact us":
+                return <ContactMailIcon />;
+              default:
+                return <MenuIcon />;
+            }
+          };
+
+          return (
+            <ListItemButton
+              key={item.label}
+              component={Link}
+              to={item.path}
+              onClick={handleDrawerToggle}
               sx={{
-                color: location.pathname === item.path ? "white" : "inherit",
+                mb: 1.5,
+                borderRadius: 2,
+                py: 1.75,
+                px: 1.5,
+                backgroundColor: isActive
+                  ? theme.palette.primary.main
+                  : "transparent",
+                color: isActive ? "white" : "inherit",
+                "&:hover": {
+                  backgroundColor: isActive
+                    ? theme.palette.primary.dark
+                    : theme.palette.action.hover,
+                },
               }}
-            />
-          </ListItem>
-        ))}
+            >
+              <ListItemIcon
+                sx={{
+                  color: isActive ? "white" : theme.palette.primary.main,
+                  minWidth: 40,
+                }}
+              >
+                {getIcon()}
+              </ListItemIcon>
+              <ListItemText
+                primary={item.label}
+                primaryTypographyProps={{ fontWeight: isActive ? "bold" : 600 }}
+              />
+            </ListItemButton>
+          );
+        })}
       </List>
+
+      <Box sx={{ mt: 2 }}>
+        <Divider />
+        <Box
+          sx={{ display: "flex", gap: 1.5, mt: 1, justifyContent: "center" }}
+        >
+          <IconButton
+            aria-label="facebook"
+            size="large"
+            href="#"
+            sx={{ color: theme.palette.primary.main }}
+          >
+            <FacebookIcon />
+          </IconButton>
+          <IconButton
+            aria-label="instagram"
+            size="large"
+            href="#"
+            sx={{ color: theme.palette.primary.main }}
+          >
+            <InstagramIcon />
+          </IconButton>
+        </Box>
+      </Box>
     </Box>
   );
 
@@ -93,7 +184,15 @@ const Header: React.FC = () => {
           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         }}
       >
-        <Toolbar sx={{ justifyContent: "space-between" }}>
+        <Toolbar
+          sx={{
+            justifyContent: "space-between",
+            width: "95%",
+            height: "10vh",
+            mx: "auto",
+            px: { xs: 2, md: 6 },
+          }}
+        >
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -185,16 +284,29 @@ const Header: React.FC = () => {
 
           {/* Mobile Menu Button */}
           {isMobile && (
-            <IconButton
-              color="primary"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{
-                color: theme.palette.primary.main,
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
+            <motion.div whileTap={{ scale: 0.92 }}>
+              <IconButton
+                aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{
+                  color: theme.palette.primary.main,
+                  width: 48,
+                  height: 48,
+                }}
+              >
+                <motion.div
+                  initial={false}
+                  animate={{
+                    rotate: mobileOpen ? 90 : 0,
+                    scale: mobileOpen ? 0.95 : 1,
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                >
+                  {mobileOpen ? <Close /> : <MenuIcon />}
+                </motion.div>
+              </IconButton>
+            </motion.div>
           )}
         </Toolbar>
       </AppBar>
@@ -210,17 +322,27 @@ const Header: React.FC = () => {
         }}
         sx={{
           display: { xs: "block", md: "none" },
+          zIndex: (theme) => theme.zIndex.drawer + 2,
           "& .MuiDrawer-paper": {
             boxSizing: "border-box",
-            width: 250,
-            height: "auto",
-            minHeight: "fit-content",
-            maxHeight: "80vh",
-            top: "10%",
+            width: "80%",
+            maxWidth: 320,
+            height: "100vh",
+            borderRadius: "12px 0 0 12px",
+            padding: 2,
+            background: theme.palette.background.paper,
+            boxShadow: "-8px 0 30px rgba(0,0,0,0.12)",
           },
         }}
       >
-        {drawer}
+        <motion.div
+          initial={{ x: 300, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: 300, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 260, damping: 30 }}
+        >
+          <Box sx={{ width: "100%", height: "100%" }}>{drawer}</Box>
+        </motion.div>
       </Drawer>
     </>
   );

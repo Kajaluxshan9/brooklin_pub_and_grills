@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://brooklinpub.ca/sitemap.xml
+Sitemap: https://brooklinpub.com/sitemap.xml
 
 # Crawl delay
 Crawl-delay: 1

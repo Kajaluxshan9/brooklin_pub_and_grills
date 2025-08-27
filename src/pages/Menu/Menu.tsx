@@ -112,8 +112,11 @@ const Menu: React.FC = () => {
         sx={{
           backgroundColor: theme.palette.primary.main,
           color: "white",
-          py: 8,
+          py: 16,
           position: "relative",
+          minHeight: "60vh", // match hero height with other pages
+          display: "flex",
+          alignItems: "center",
         }}
       >
         <Container maxWidth="xl" sx={{ px: { xs: 2, md: 4, xl: 6 } }}>
@@ -170,9 +173,9 @@ const Menu: React.FC = () => {
             justifyContent: "center", // Center tabs horizontally
             mb: 2,
             mx: "auto", // Center tabs for all screen sizes
-            display: "flex", // Use flex for alignment
+            display: "flex",
+            flexDirection: "column", // Use flex for alignment
             width: "100%", // Ensure tabs span the container width
-            maxWidth: "600px", // Limit width on larger screens
             "& .MuiTab-root": {
               fontSize: "1.1rem",
               fontWeight: "bold",
@@ -700,7 +703,7 @@ const Menu: React.FC = () => {
                   backgroundColor: theme.palette.primary.dark,
                 },
               }}
-              href="https://www.kitchonapp.ca/ordering/restaurant/menu?restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312"
+              href="https://www.eastserve.ca/ordering/restaurant/menu?company_uid=f0d6a7d8-6663-43c6-af55-0d11a9773920&restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312&facebook=true"
               target="_blank"
               rel="noopener noreferrer"
             >

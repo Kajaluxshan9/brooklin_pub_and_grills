@@ -208,6 +208,9 @@ const contactCategories = [
           color: "white",
           py: 8,
           position: "relative",
+          minHeight: "60vh", // match hero height with other pages
+          display: "flex",
+          alignItems: "center",
         }}
       >
         <Container maxWidth="xl" sx={{ px: { xs: 2, md: 4, xl: 6 } }}>

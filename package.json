@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "Official website for Brooklin Pub & Grill - A neighborhood pub in Whitby, Ontario",
-  "homepage": "https://brooklinpub.ca",
+  "homepage": "https://brooklinpub.com",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
