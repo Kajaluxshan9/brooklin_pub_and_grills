@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -15,6 +15,7 @@ import {
   IconButton,
   Dialog,
   DialogContent,
+  Fade,
 } from "@mui/material";
 import {
   Restaurant,
@@ -37,6 +38,28 @@ const Home: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isSmallMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [showLandingPopup, setShowLandingPopup] = useState(false);
+
+  // Landing popup logic - show on every page load/refresh
+  useEffect(() => {
+    // Show popup after a short delay for better UX
+    const timer = setTimeout(() => {
+      setShowLandingPopup(true);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleCloseLandingPopup = () => {
+    setShowLandingPopup(false);
+  };
+
+  const handleLandingPopupClick = () => {
+    window.open(
+      "https://www.eastserve.ca/ordering/restaurant/menu?company_uid=f0d6a7d8-6663-43c6-af55-0d11a9773920&restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312&facebook=true",
+      "_blank"
+    );
+    handleCloseLandingPopup();
+  };
 
   const features = [
     {
@@ -175,6 +198,15 @@ const Home: React.FC = () => {
                       mx: "auto",
                       display: "block",
                       filter: "drop-shadow(0 4px 15px rgba(0,0,0,0.3))",
+                      // Safari-specific fixes
+                      WebkitBackfaceVisibility: "hidden",
+                      WebkitTransform: "translateZ(0)",
+                      WebkitAppearance: "none",
+                      border: "none",
+                      outline: "none",
+                      "&::-webkit-focus-ring-color": {
+                        color: "transparent",
+                      },
                     }}
                   />
                 </Box>
@@ -897,6 +929,134 @@ const Home: React.FC = () => {
               }}
             />
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Landing Popup Dialog */}
+      <Dialog
+        open={showLandingPopup}
+        onClose={handleCloseLandingPopup}
+        maxWidth={false}
+        fullWidth={false}
+        TransitionComponent={Fade}
+        TransitionProps={{ timeout: 500 }}
+        sx={{
+          "& .MuiDialog-paper": {
+            backgroundColor: "transparent",
+            boxShadow: "none",
+            borderRadius: 3,
+            overflow: "visible",
+            width: {
+              xs: "90vw", // 90% of viewport width on mobile
+              sm: "80vw", // 80% on small tablets
+              md: "70vw", // 70% on tablets
+              lg: "60vw", // 60% on desktops
+              xl: "50vw", // 50% on large desktops
+            },
+            maxWidth: {
+              xs: "350px", // Max 350px on mobile
+              sm: "450px", // Max 450px on small tablets
+              md: "550px", // Max 550px on tablets
+              lg: "650px", // Max 650px on desktops
+              xl: "700px", // Max 700px on large desktops
+            },
+            height: "auto",
+            maxHeight: {
+              xs: "70vh", // Max 70% of viewport height on mobile
+              sm: "75vh", // Max 75% on small tablets
+              md: "80vh", // Max 80% on tablets
+              lg: "85vh", // Max 85% on desktops
+              xl: "90vh", // Max 90% on large desktops
+            },
+          },
+        }}
+      >
+        <DialogContent
+          sx={{
+            p: 0,
+            position: "relative",
+            cursor: "pointer",
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            "&:hover": {
+              transform: "scale(1.02)",
+              transition: "transform 0.3s ease",
+            },
+          }}
+          onClick={handleLandingPopupClick}
+        >
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCloseLandingPopup();
+            }}
+            sx={{
+              position: "absolute",
+              top: { xs: 8, sm: 12 },
+              right: { xs: 8, sm: 12 },
+              backgroundColor: theme.palette.primary.main,
+              color: "white",
+              zIndex: 3,
+              width: { xs: 32, sm: 36 },
+              height: { xs: 32, sm: 36 },
+              boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+              "&:hover": {
+                backgroundColor: theme.palette.primary.dark,
+                transform: "scale(1.1)",
+              },
+              transition: "all 0.2s ease",
+            }}
+          >
+            <Close sx={{ fontSize: { xs: 16, sm: 18 } }} />
+          </IconButton>
+          <Box
+            component="img"
+            src="/images/popup-image.jpg"
+            alt="Special Offer - Order Online"
+            sx={{
+              width: "100%",
+              height: "100%",
+              maxHeight: {
+                xs: "55vh", // Reduced to 55% on mobile to prevent scrolling
+                sm: "60vh", // 60% on small tablets
+                md: "65vh", // 65% on tablets
+                lg: "70vh", // 70% on desktops
+                xl: "75vh", // 75% on large desktops
+              },
+              maxWidth: "100%",
+              objectFit: "contain",
+              borderRadius: 3,
+              display: "block",
+            }}
+            onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+              // Fallback if image doesn't exist
+              e.currentTarget.src = "/images/brooklinpub-logo.png";
+            }}
+          />
+          <Typography
+            variant="caption"
+            sx={{
+              position: "absolute",
+              bottom: { xs: 8, sm: 10 },
+              left: "50%",
+              transform: "translateX(-50%)",
+              color: "white",
+              backgroundColor: "rgba(0,0,0,0.7)",
+              px: { xs: 1.5, sm: 2 },
+              py: { xs: 0.25, sm: 0.5 },
+              borderRadius: 1,
+              fontSize: { xs: "0.65rem", sm: "0.75rem" },
+              textAlign: "center",
+              maxWidth: "85%",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            Click to order online • Tap outside to close
+          </Typography>
         </DialogContent>
       </Dialog>
     </Box>

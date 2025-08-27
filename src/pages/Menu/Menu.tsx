@@ -157,7 +157,7 @@ const Menu: React.FC = () => {
       <Container
         maxWidth="xl"
         sx={{
-          py: { xs: 6, xl: 8 },
+          py: { xs: 4, xl: 8 },
           px: { xs: 2, md: 4, xl: 6 },
           alignItems: "center",
         }}
@@ -169,13 +169,6 @@ const Menu: React.FC = () => {
           scrollButtons="auto"
           allowScrollButtonsMobile
           sx={{
-            alignItems: "center",
-            justifyContent: "center", // Center tabs horizontally
-            mb: 2,
-            mx: "auto", // Center tabs for all screen sizes
-            display: "flex",
-            flexDirection: "column", // Use flex for alignment
-            width: "100%", // Ensure tabs span the container width
             "& .MuiTab-root": {
               fontSize: "1.1rem",
               fontWeight: "bold",
@@ -207,6 +200,9 @@ const Menu: React.FC = () => {
             },
             "& .MuiTabs-indicator": {
               display: "none",
+            },
+            "& .MuiTabs-flexContainer": {
+              justifyContent: { xs: "flex-start", md: "center" },
             },
           }}
         >
@@ -707,7 +703,7 @@ const Menu: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Order Online Now
+              Order Now
             </Button>
           </Card>
         </motion.div>

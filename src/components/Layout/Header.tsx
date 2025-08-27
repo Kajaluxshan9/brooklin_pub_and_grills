@@ -27,8 +27,16 @@ import {
   Facebook as FacebookIcon,
   Instagram as InstagramIcon,
 } from "@mui/icons-material";
+import SvgIcon from "@mui/material/SvgIcon";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+
+// TikTok SVG icon
+const TikTokIcon = (props: any) => (
+  <SvgIcon {...props} viewBox="0 0 24 24">
+    <path d="M12.5 2c.41 0 .75.34.75.75v13.5a3.25 3.25 0 1 1-3.25-3.25c.41 0 .75.34.75.75s-.34.75-.75.75a1.75 1.75 0 1 0 1.75 1.75V4.5c0-.41.34-.75.75-.75zM16.5 5c.41 0 .75.34.75.75v.5c0 2.07 1.68 3.75 3.75 3.75.41 0 .75.34.75.75s-.34.75-.75.75c-2.07 0-3.75-1.68-3.75-3.75v-.5c0-.41.34-.75.75-.75z" />
+  </SvgIcon>
+);
 
 const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -71,7 +79,16 @@ const Header: React.FC = () => {
           <Avatar
             src="/images/brooklinpub-logo.png"
             alt="logo"
-            sx={{ width: 48, height: 48 }}
+            sx={{
+              width: 48,
+              height: 48,
+              // Safari-specific fixes
+              WebkitBackfaceVisibility: "hidden",
+              WebkitTransform: "translateZ(0)",
+              WebkitAppearance: "none",
+              border: "none",
+              outline: "none",
+            }}
           />
           <Box>
             <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
@@ -156,7 +173,9 @@ const Header: React.FC = () => {
           <IconButton
             aria-label="facebook"
             size="large"
-            href="#"
+            href="https://web.facebook.com/brooklinpub?_rdc=1&_rdr"
+            target="_blank"
+            rel="noopener noreferrer"
             sx={{ color: theme.palette.primary.main }}
           >
             <FacebookIcon />
@@ -164,10 +183,22 @@ const Header: React.FC = () => {
           <IconButton
             aria-label="instagram"
             size="large"
-            href="#"
+            href="https://www.instagram.com/brooklinpubngrill/"
+            target="_blank"
+            rel="noopener noreferrer"
             sx={{ color: theme.palette.primary.main }}
           >
             <InstagramIcon />
+          </IconButton>
+          <IconButton
+            aria-label="tiktok"
+            size="large"
+            href="https://www.tiktok.com/@brooklinpubngrill"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ color: theme.palette.primary.main }}
+          >
+            <TikTokIcon />
           </IconButton>
         </Box>
       </Box>
@@ -190,7 +221,7 @@ const Header: React.FC = () => {
             width: "95%",
             height: "10vh",
             mx: "auto",
-            px: { xs: 2, md: 6 },
+            px: { xs: 1, md: 6 },
           }}
         >
           {/* Logo */}
@@ -204,7 +235,16 @@ const Header: React.FC = () => {
                 component="img"
                 src="/images/brooklinpub-logo.png"
                 alt="Brooklin Pub Logo"
-                sx={{ height: 50, marginRight: 2 }}
+                sx={{
+                  height: 50,
+                  marginRight: 2,
+                  // Safari-specific fixes
+                  WebkitBackfaceVisibility: "hidden",
+                  WebkitTransform: "translateZ(0)",
+                  WebkitAppearance: "none",
+                  border: "none",
+                  outline: "none",
+                }}
               />
               <Typography
                 variant="h6"
@@ -282,31 +322,70 @@ const Header: React.FC = () => {
             </Box>
           )}
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Buttons Container */}
           {isMobile && (
-            <motion.div whileTap={{ scale: 0.92 }}>
-              <IconButton
-                aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{
-                  color: theme.palette.primary.main,
-                  width: 48,
-                  height: 48,
-                }}
-              >
-                <motion.div
-                  initial={false}
-                  animate={{
-                    rotate: mobileOpen ? 90 : 0,
-                    scale: mobileOpen ? 0.95 : 1,
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2, // Better spacing between buttons
+                mr: 0, // Ensure right alignment
+              }}
+            >
+              {/* Mobile Online Order Button */}
+              <motion.div whileTap={{ scale: 0.92 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  href="https://www.eastserve.ca/ordering/restaurant/menu?company_uid=f0d6a7d8-6663-43c6-af55-0d11a9773920&restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312&facebook=true"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    fontSize: "0.75rem",
+                    px: 1.5,
+                    py: 0.75,
+                    borderRadius: 2,
+                    textTransform: "none",
+                    fontWeight: "bold",
+                    whiteSpace: "nowrap",
+                    minWidth: "auto",
+                    "@media (max-width: 400px)": {
+                      fontSize: "0.7rem",
+                      px: 1,
+                    },
                   }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
-                  {mobileOpen ? <Close /> : <MenuIcon />}
-                </motion.div>
-              </IconButton>
-            </motion.div>
+                  Order Online
+                </Button>
+              </motion.div>
+
+              {/* Mobile Menu Button */}
+              <motion.div whileTap={{ scale: 0.92 }}>
+                <IconButton
+                  aria-label={
+                    mobileOpen ? "Close navigation" : "Open navigation"
+                  }
+                  edge="start"
+                  onClick={handleDrawerToggle}
+                  sx={{
+                    color: theme.palette.primary.main,
+                    width: 48,
+                    height: 48,
+                  }}
+                >
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      rotate: mobileOpen ? 90 : 0,
+                      scale: mobileOpen ? 0.95 : 1,
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  >
+                    {mobileOpen ? <Close /> : <MenuIcon />}
+                  </motion.div>
+                </IconButton>
+              </motion.div>
+            </Box>
           )}
         </Toolbar>
       </AppBar>

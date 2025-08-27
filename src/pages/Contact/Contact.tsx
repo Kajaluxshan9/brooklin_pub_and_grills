@@ -190,11 +190,7 @@ const contactCategories = [
     {
       icon: <Schedule sx={{ fontSize: 40 }} />,
       title: "Hours",
-      details: [
-        "Mon-Thu: 11 AM - 11 PM",
-        "Fri-Sat: 11 AM - 12 AM",
-        "Sun: 11 AM - 11 PM",
-      ],
+      details: ["Sun-Thu: 11 AM - 11 PM", "Fri-Sat: 11 AM - 1 AM"],
       color: "#F39C12",
     },
   ];

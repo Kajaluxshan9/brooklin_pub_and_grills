@@ -179,6 +179,15 @@ const About: React.FC = () => {
                   mx: "auto",
                   display: "block",
                   filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.2))",
+                  // Safari-specific fixes
+                  WebkitBackfaceVisibility: "hidden",
+                  WebkitTransform: "translateZ(0)",
+                  WebkitAppearance: "none",
+                  border: "none",
+                  outline: "none",
+                  "&::-webkit-focus-ring-color": {
+                    color: "transparent",
+                  },
                 }}
               />
             </motion.div>

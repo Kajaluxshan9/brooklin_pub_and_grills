@@ -59,7 +59,16 @@ const Footer: React.FC = () => {
                   component="img"
                   src="/images/brooklinpub-logo.png"
                   alt="Brooklin Pub Logo"
-                  sx={{ height: 40, mr: 2 }}
+                  sx={{
+                    height: 40,
+                    mr: 2,
+                    // Safari-specific fixes
+                    WebkitBackfaceVisibility: "hidden",
+                    WebkitTransform: "translateZ(0)",
+                    WebkitAppearance: "none",
+                    border: "none",
+                    outline: "none",
+                  }}
                 />
                 <Typography variant="h6" fontWeight="bold">
                   Brooklin Pub & Grill
@@ -202,12 +211,11 @@ const Footer: React.FC = () => {
                 }}
               >
                 <Typography variant="body2" sx={{ mb: 0.5 }}>
-                  Monday - Thursday: 11 AM - 11 PM
+                  Sunday - Thursday: 11 AM - 11 PM
                 </Typography>
                 <Typography variant="body2" sx={{ mb: 0.5 }}>
-                  Friday - Saturday: 11 AM - 12 AM
+                  Friday - Saturday: 11 AM - 1 AM
                 </Typography>
-                <Typography variant="body2">Sunday: 11 AM - 11 PM</Typography>
               </Box>
             </motion.div>
           </Grid>
