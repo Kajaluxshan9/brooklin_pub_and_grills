@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/order-onlinegf(.*)",
+      "destination": "/api/order-onlinegf"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
