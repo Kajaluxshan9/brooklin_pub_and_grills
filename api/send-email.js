@@ -88,7 +88,7 @@ export default async function handler(req, res) {
 
       // Send email
       const info = await transporter.sendMail(mailOptions);
-      console.log("Email sent successfully:", info.messageId);
+      // Email sent successfully. Detailed logging removed to avoid capturing PII.
 
       res.status(200).json({
         message: "Email sent successfully! We'll get back to you soon.",
@@ -98,10 +98,19 @@ export default async function handler(req, res) {
       console.error("Error sending email:", error);
 
       // Provide more specific error messages
+      // Avoid logging full error objects which may contain sensitive info.
+      const errCode = error && error.code ? error.code : "UNKNOWN";
+      const errMessage = error && error.message ? error.message : "No message";
+      console.error("/api/send-email: error sending email", {
+        code: errCode,
+        message: errMessage,
+      });
+
+      // Provide a user-friendly response, map known error codes to helpful messages.
       let errorMessage = "Failed to send email. Please try again later.";
-      if (error.code === "EAUTH") {
+      if (errCode === "EAUTH") {
         errorMessage = "Email authentication failed. Please contact support.";
-      } else if (error.code === "ECONNECTION") {
+      } else if (errCode === "ECONNECTION") {
         errorMessage =
           "Connection error. Please check your internet connection.";
       }

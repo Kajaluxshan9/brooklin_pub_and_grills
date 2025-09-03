@@ -24,11 +24,7 @@ export default async function handler(req, res) {
 
   if (req.method === "POST") {
     try {
-      // Log body for debugging; remove or reduce logging in production
-      console.log(
-        "/order-onlinegf webhook received:",
-        JSON.stringify(req.body)
-      );
+      // Request body received. Detailed logging removed to avoid capturing PII.
 
       // Basic acknowledgement to stop retries. If you need to forward the
       // payload (e.g., send email or place order), add that logic here.
@@ -42,24 +38,10 @@ export default async function handler(req, res) {
 
   // Provide a friendly response for browser GETs and keep POST/OPTIONS behavior unchanged.
   if (req.method === "GET") {
-    res.setHeader("Content-Type", "text/html; charset=utf-8");
-    res.status(200).send(`
-      <!doctype html>
-      <html>
-        <head>
-          <meta charset="utf-8" />
-          <meta name="viewport" content="width=device-width,initial-scale=1" />
-          <title>Order webhook</title>
-          <style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:48px;color:#111}a{color:#0366d6}</style>
-        </head>
-        <body>
-          <h1>Order webhook endpoint</h1>
-          <p>This endpoint is a webhook receiver intended for <strong>POST</strong> requests only.</p>
-          <p>If you arrived here in a browser, go back to the <a href="/">homepage</a> or use the site UI to place an order.</p>
-          <p>External services should POST JSON to this URL. The server will respond with <code>200</code> on successful receipt.</p>
-        </body>
-      </html>
-    `);
+    // Redirect browser GETs back to the homepage.
+    // Keep CORS and other headers already set above.
+    res.setHeader("Location", "/");
+    res.status(302).end();
     return;
   }
 

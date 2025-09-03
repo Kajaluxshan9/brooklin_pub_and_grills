@@ -152,10 +152,13 @@ const contactCategories = [
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error("Error sending message:", error);
+        // Don't print full error objects to console in production.
+        // Log a short message and, if present, include a code.
+  const code = (error as unknown as { code?: string }).code;
+        console.error("Contact form error:", { message: error.message, code });
         setAlertMessage(error.message);
       } else {
-        console.error("Unexpected error:", error);
+        console.error("Contact form unexpected error");
         setAlertMessage(
           "An unexpected error occurred. Please try again later."
         );
