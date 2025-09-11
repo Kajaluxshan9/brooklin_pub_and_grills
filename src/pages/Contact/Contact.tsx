@@ -55,7 +55,7 @@ const Contact: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
 const contactCategories = [
-  { value: "party-hall", label: "Party Hall Booking" },
+  { value: "party-reservation", label: "Party Reservation" },
   { value: "general-info", label: "General Inquiry" },
   { value: "feedback", label: "Share Your Feedback" },
 ];
