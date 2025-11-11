@@ -8,8 +8,8 @@ import {
   CardMedia,
   CardContent,
   Button,
-  Tab,
-  Tabs,
+  // Tab,
+  // Tabs,
   useTheme,
   Dialog,
   DialogContent,
@@ -22,61 +22,64 @@ import {
   Download,
   Fullscreen,
 } from "@mui/icons-material";
-import { motion, AnimatePresence } from "framer-motion";
+// import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
+// interface TabPanelProps {
+//   children?: React.ReactNode;
+//   index: number;
+//   value: number;
+// }
 
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+// function TabPanel(props: TabPanelProps) {
+//   const { children, value, index, ...other } = props;
 
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`menu-tabpanel-${index}`}
-      aria-labelledby={`menu-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
+//   return (
+//     <div
+//       role="tabpanel"
+//       hidden={value !== index}
+//       id={`menu-tabpanel-${index}`}
+//       aria-labelledby={`menu-tab-${index}`}
+//       {...other}
+//     >
+//       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+//     </div>
+//   );
+// }
 
 const Menu: React.FC = () => {
   const theme = useTheme();
-  const [tabValue, setTabValue] = useState(0); // Default to "Primary" tab
+  // const [tabValue, setTabValue] = useState(0); // Default to "Primary" tab
+  const [tabValue] = useState(0); // Default to "Primary" tab
+
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const menuImages = [
     {
       src: "/images/brooklin menu-page1.jpg",
-      title: "Main Menu",
+      title: "Main Menu Part I",
       category: "main",
     },
     {
       src: "/images/brooklin menu-page-2.jpg",
-      title: "Main Menu",
+      title: "Main Menu Part II",
       category: "main",
     },
-    {
-      src: "/images/set-dinner-menu.jpg",
-      title: "Set Dinner Menu",
-      category: "dinner",
-    },
-    {
-      src: "/images/Catering-Menu-brooklin.jpg",
-      title: "Catering Menu",
-      category: "catering",
-    },
+    // {
+    //   src: "/images/set-dinner-menu.jpg",
+    //   title: "Set Dinner Menu",
+    //   category: "dinner",
+    // },
+    // {
+    //   src: "/images/Catering-Menu-brooklin.jpg",
+    //   title: "Catering Menu",
+    //   category: "catering",
+    // },
   ];
 
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
+  // const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+  //   setTabValue(newValue);
+  // };
 
   const handleImageClick = (imageSrc: string) => {
     setSelectedImage(imageSrc);
@@ -101,7 +104,7 @@ const Menu: React.FC = () => {
     }
   };
 
-  const categories = ["main", "dinner", "catering"];
+  // const categories = ["main", "dinner", "catering"];
 
   // Removed custom scrollTabs logic to match Specials.tsx navigation style
 
@@ -154,7 +157,7 @@ const Menu: React.FC = () => {
         </Container>
       </Box>
       {/* Menu Categories */}
-      <Container
+      {/* <Container
         maxWidth="xl"
         sx={{
           py: { xs: 4, xl: 8 },
@@ -654,6 +657,108 @@ const Menu: React.FC = () => {
             </TabPanel>
           </motion.div>
         </AnimatePresence>
+      </Container> */}
+
+      <Container sx={{ mt: "50px" }}>
+        <Grid container spacing={{ xs: 4, xl: 6 }}>
+          {getFilteredImages().map((image, index) => (
+            <Grid item xs={12} sm={6} md={4} xl={3} key={image.src}>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <Card
+                  sx={{
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                    position: "relative",
+                    "&:hover": {
+                      boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
+                      "& .overlay-icons": {
+                        opacity: 1,
+                      },
+                    },
+                  }}
+                  onClick={() => handleImageClick(image.src)}
+                >
+                  <CardMedia
+                    component="img"
+                    image={image.src}
+                    alt={image.title}
+                    sx={{
+                      height: "auto",
+                      minHeight: 200,
+                      objectFit: "contain",
+                      width: "100%",
+                    }}
+                  />
+                  <Box
+                    className="overlay-icons"
+                    sx={{
+                      position: "absolute",
+                      top: 8,
+                      right: 8,
+                      display: "flex",
+                      gap: 1,
+                      opacity: { xs: 1, md: 0 }, // Always visible on mobile
+                      transition: "opacity 0.3s ease",
+                    }}
+                  >
+                    <IconButton
+                      size="small"
+                      sx={{
+                        backgroundColor: "rgba(0,0,0,0.7)",
+                        color: "white",
+                        "&:hover": {
+                          backgroundColor: "rgba(0,0,0,0.9)",
+                        },
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleImageClick(image.src);
+                      }}
+                    >
+                      <Fullscreen />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      sx={{
+                        backgroundColor: "rgba(0,0,0,0.7)",
+                        color: "white",
+                        "&:hover": {
+                          backgroundColor: "rgba(0,0,0,0.9)",
+                        },
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const link = document.createElement("a");
+                        link.href = image.src;
+                        link.download = `${image.title}.jpg`;
+                        link.click();
+                      }}
+                    >
+                      <Download />
+                    </IconButton>
+                  </Box>
+                  <CardContent>
+                    <Typography variant="h6" textAlign="center">
+                      {image.title}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      textAlign="center"
+                    >
+                      Fresh ingredients, crafted with care
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </Grid>
+          ))}
+        </Grid>
       </Container>
       {/* Order Online CTA */}
       <Container
