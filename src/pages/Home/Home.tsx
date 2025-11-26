@@ -24,6 +24,8 @@ import {
   Download,
   Fullscreen,
   Close,
+  ChevronLeft,
+  ChevronRight,
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
@@ -39,6 +41,21 @@ const Home: React.FC = () => {
   const isSmallMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [showLandingPopup, setShowLandingPopup] = useState(false);
+  const [currentPopupImageIndex, setCurrentPopupImageIndex] = useState(0);
+
+  // Popup images array
+  const popupImages = [
+    {
+      src: "/images/popup-image.jpg",
+      alt: "Special Offer - Order Online",
+      link: "https://www.eastserve.ca/ordering/restaurant/menu?company_uid=f0d6a7d8-6663-43c6-af55-0d11a9773920&restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312&facebook=true",
+    },
+    {
+      src: "/images/2026 - New year.jpg",
+      alt: "New Year 2026 Celebration",
+      link: "https://www.eastserve.ca/ordering/restaurant/menu?company_uid=f0d6a7d8-6663-43c6-af55-0d11a9773920&restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312&facebook=true",
+    },
+  ];
 
   // Landing popup logic - show on every page load/refresh
   useEffect(() => {
@@ -49,16 +66,42 @@ const Home: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Auto-rotate popup images every 5 seconds
+  useEffect(() => {
+    if (!showLandingPopup) return;
+
+    const rotationTimer = setInterval(() => {
+      setCurrentPopupImageIndex(
+        (prevIndex) => (prevIndex + 1) % popupImages.length
+      );
+    }, 5000); // 5 seconds
+
+    return () => clearInterval(rotationTimer);
+  }, [showLandingPopup, popupImages.length]);
+
   const handleCloseLandingPopup = () => {
     setShowLandingPopup(false);
+    setCurrentPopupImageIndex(0); // Reset to first image when closed
   };
 
   const handleLandingPopupClick = () => {
-    window.open(
-      "https://www.eastserve.ca/ordering/restaurant/menu?company_uid=f0d6a7d8-6663-43c6-af55-0d11a9773920&restaurant_uid=29e4ef84-c523-4a58-9e4b-6546d6637312&facebook=true",
-      "_blank"
-    );
+    const currentImage = popupImages[currentPopupImageIndex];
+    window.open(currentImage.link, "_blank");
     handleCloseLandingPopup();
+  };
+
+  const handleNextPopupImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentPopupImageIndex(
+      (prevIndex) => (prevIndex + 1) % popupImages.length
+    );
+  };
+
+  const handlePrevPopupImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentPopupImageIndex((prevIndex) =>
+      prevIndex === 0 ? popupImages.length - 1 : prevIndex - 1
+    );
   };
 
   const features = [
@@ -947,18 +990,18 @@ const Home: React.FC = () => {
             borderRadius: 3,
             overflow: "visible",
             width: {
-              xs: "90vw", // 90% of viewport width on mobile
-              sm: "80vw", // 80% on small tablets
-              md: "70vw", // 70% on tablets
-              lg: "60vw", // 60% on desktops
-              xl: "50vw", // 50% on large desktops
+              xs: "95vw", // 95% of viewport width on mobile
+              sm: "85vw", // 85% on small tablets
+              md: "75vw", // 75% on tablets
+              lg: "65vw", // 65% on desktops
+              xl: "55vw", // 55% on large desktops
             },
             maxWidth: {
-              xs: "350px", // Max 350px on mobile
-              sm: "450px", // Max 450px on small tablets
-              md: "550px", // Max 550px on tablets
-              lg: "650px", // Max 650px on desktops
-              xl: "700px", // Max 700px on large desktops
+              xs: "400px", // Max 400px on mobile
+              sm: "500px", // Max 500px on small tablets
+              md: "650px", // Max 650px on tablets
+              lg: "750px", // Max 750px on desktops
+              xl: "850px", // Max 850px on large desktops
             },
             height: "auto",
             maxHeight: {
@@ -975,18 +1018,21 @@ const Home: React.FC = () => {
           sx={{
             p: 0,
             position: "relative",
-            cursor: "pointer",
+            cursor: currentPopupImageIndex === 0 ? "pointer" : "default",
             overflow: "hidden",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             "&:hover": {
-              transform: "scale(1.02)",
+              transform: currentPopupImageIndex === 0 ? "scale(1.02)" : "none",
               transition: "transform 0.3s ease",
             },
           }}
-          onClick={handleLandingPopupClick}
+          onClick={
+            currentPopupImageIndex === 0 ? handleLandingPopupClick : undefined
+          }
         >
+          {/* Close Button */}
           <IconButton
             onClick={(e) => {
               e.stopPropagation();
@@ -1011,19 +1057,77 @@ const Home: React.FC = () => {
           >
             <Close sx={{ fontSize: { xs: 16, sm: 18 } }} />
           </IconButton>
+
+          {/* Previous Button */}
+          {popupImages.length > 1 && (
+            <IconButton
+              onClick={handlePrevPopupImage}
+              sx={{
+                position: "absolute",
+                left: { xs: 4, sm: 8, md: 12 },
+                top: "50%",
+                transform: "translateY(-50%)",
+                backgroundColor: "rgba(0, 0, 0, 0.6)",
+                color: "white",
+                zIndex: 3,
+                width: { xs: 30, sm: 36, md: 40 },
+                height: { xs: 30, sm: 36, md: 40 },
+                backdropFilter: "blur(4px)",
+                border: "2px solid rgba(255, 255, 255, 0.3)",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.8)",
+                  transform: "translateY(-50%) scale(1.1)",
+                  border: "2px solid rgba(255, 255, 255, 0.6)",
+                },
+                transition: "all 0.3s ease",
+              }}
+            >
+              <ChevronLeft sx={{ fontSize: { xs: 20, sm: 24, md: 28 } }} />
+            </IconButton>
+          )}
+
+          {/* Next Button */}
+          {popupImages.length > 1 && (
+            <IconButton
+              onClick={handleNextPopupImage}
+              sx={{
+                position: "absolute",
+                right: { xs: 4, sm: 8, md: 12 },
+                top: "50%",
+                transform: "translateY(-50%)",
+                backgroundColor: "rgba(0, 0, 0, 0.6)",
+                color: "white",
+                zIndex: 3,
+                width: { xs: 30, sm: 36, md: 40 },
+                height: { xs: 30, sm: 36, md: 40 },
+                backdropFilter: "blur(4px)",
+                border: "2px solid rgba(255, 255, 255, 0.3)",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.8)",
+                  transform: "translateY(-50%) scale(1.1)",
+                  border: "2px solid rgba(255, 255, 255, 0.6)",
+                },
+                transition: "all 0.3s ease",
+              }}
+            >
+              <ChevronRight sx={{ fontSize: { xs: 20, sm: 24, md: 28 } }} />
+            </IconButton>
+          )}
+
+          {/* Image */}
           <Box
             component="img"
-            src="/images/popup-image.jpg"
-            alt="Special Offer - Order Online"
+            src={popupImages[currentPopupImageIndex].src}
+            alt={popupImages[currentPopupImageIndex].alt}
             sx={{
               width: "100%",
               height: "100%",
               maxHeight: {
-                xs: "55vh", // Reduced to 55% on mobile to prevent scrolling
-                sm: "60vh", // 60% on small tablets
-                md: "65vh", // 65% on tablets
-                lg: "70vh", // 70% on desktops
-                xl: "75vh", // 75% on large desktops
+                xs: "55vh",
+                sm: "60vh",
+                md: "65vh",
+                lg: "70vh",
+                xl: "75vh",
               },
               maxWidth: "100%",
               objectFit: "contain",
@@ -1035,6 +1139,62 @@ const Home: React.FC = () => {
               e.currentTarget.src = "/images/brooklinpub-logo.png";
             }}
           />
+
+          {/* Pagination Dots */}
+          {popupImages.length > 1 && (
+            <Box
+              onClick={(e) => e.stopPropagation()}
+              sx={{
+                position: "absolute",
+                bottom: { xs: 40, sm: 50, md: 55 },
+                left: "50%",
+                transform: "translateX(-50%)",
+                display: "flex",
+                gap: { xs: 1, sm: 1.5 },
+                zIndex: 3,
+                backgroundColor: "rgba(0, 0, 0, 0.4)",
+                backdropFilter: "blur(8px)",
+                px: { xs: 1.5, sm: 2 },
+                py: { xs: 0.75, sm: 1 },
+                borderRadius: 5,
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+              }}
+            >
+              {popupImages.map((_, index) => (
+                <Box
+                  key={index}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentPopupImageIndex(index);
+                  }}
+                  sx={{
+                    width: { xs: 8, sm: 10, md: 12 },
+                    height: { xs: 8, sm: 10, md: 12 },
+                    borderRadius: "50%",
+                    backgroundColor:
+                      currentPopupImageIndex === index
+                        ? theme.palette.primary.main
+                        : "rgba(255, 255, 255, 0.5)",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                    border:
+                      currentPopupImageIndex === index
+                        ? "2px solid white"
+                        : "2px solid transparent",
+                    "&:hover": {
+                      backgroundColor:
+                        currentPopupImageIndex === index
+                          ? theme.palette.primary.light
+                          : "rgba(255, 255, 255, 0.8)",
+                      transform: "scale(1.2)",
+                    },
+                  }}
+                />
+              ))}
+            </Box>
+          )}
+
+          {/* Caption */}
           <Typography
             variant="caption"
             sx={{
@@ -1055,7 +1215,9 @@ const Home: React.FC = () => {
               textOverflow: "ellipsis",
             }}
           >
-            Click to order online • Tap outside to close
+            {currentPopupImageIndex === 0
+              ? "Click to order online"
+              : "Tap outside to close"}
           </Typography>
         </DialogContent>
       </Dialog>
