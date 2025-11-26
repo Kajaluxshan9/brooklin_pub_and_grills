@@ -80,14 +80,26 @@ const Home: React.FC = () => {
   }, [showLandingPopup, popupImages.length]);
 
   const handleCloseLandingPopup = () => {
-    setShowLandingPopup(false);
-    setCurrentPopupImageIndex(0); // Reset to first image when closed
+    // If there are more images to show, move to the next one
+    if (currentPopupImageIndex < popupImages.length - 1) {
+      setCurrentPopupImageIndex(currentPopupImageIndex + 1);
+    } else {
+      // All images have been shown, close the popup completely
+      setShowLandingPopup(false);
+      setCurrentPopupImageIndex(0); // Reset for next time
+    }
   };
 
   const handleLandingPopupClick = () => {
     const currentImage = popupImages[currentPopupImageIndex];
     window.open(currentImage.link, "_blank");
-    handleCloseLandingPopup();
+    // After clicking, move to next image or close if it's the last one
+    if (currentPopupImageIndex < popupImages.length - 1) {
+      setCurrentPopupImageIndex(currentPopupImageIndex + 1);
+    } else {
+      setShowLandingPopup(false);
+      setCurrentPopupImageIndex(0);
+    }
   };
 
   const handleNextPopupImage = (e: React.MouseEvent) => {
@@ -1217,7 +1229,9 @@ const Home: React.FC = () => {
           >
             {currentPopupImageIndex === 0
               ? "Click to order online"
-              : "Tap outside to close"}
+              : currentPopupImageIndex < popupImages.length - 1
+              ? "Click X to see next"
+              : "Click X to close"}
           </Typography>
         </DialogContent>
       </Dialog>
